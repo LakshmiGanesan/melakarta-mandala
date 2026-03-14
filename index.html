@@ -7,70 +7,198 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+Devanagari:wght@400;500&display=swap');
 
+/* ── CSS VARIABLES — dark (default) ── */
+:root {
+  --bg:            #07050a;
+  --header-title:  #c9aa5a;
+  --header-sub:    rgba(201,170,90,0.40);
+  --badge-text:    rgba(201,170,90,0.50);
+  --badge-border:  rgba(201,170,90,0.22);
+  --ring-bold:     rgba(201,170,90,0.45);
+  --ring-soft:     rgba(201,170,90,0.20);
+  --divider:       rgba(201,170,90,0.52);
+  --divider-main:  rgba(201,170,90,0.90);
+  --divider-zero:  rgba(201,170,90,0.50);
+  --glow-bg:       rgba(201,170,90,0.08);
+  --glow-mid:      rgba(201,170,90,0.02);
+  --rim:           rgba(201,170,90,0.18);
+  --tick:          rgba(201,170,90,0.22);
+  --swara-lbl:     rgba(201,170,90,0.65);
+  --ctr-fill:      #0b0910;
+  --ctr-stroke:    rgba(201,170,90,0.42);
+  --ctr-inner:     rgba(201,170,90,0.10);
+  --ctr-sp:        rgba(201,170,90,0.82);
+  --ctr-sub:       rgba(201,170,90,0.32);
+  --ctr-fixed:     rgba(201,170,90,0.20);
+  --name-text:     rgba(240,232,208,0.84);
+  --hit-hover:     rgba(255,255,255,0.045);
+  --tt-bg:         rgba(7,5,10,0.97);
+  --tt-border:     rgba(201,170,90,0.38);
+  --tt-n:          rgba(201,170,90,0.50);
+  --tt-name:       #f0e8d0;
+  --tt-skt:        rgba(201,170,90,0.60);
+  --tt-sw:         rgba(240,232,208,0.82);
+  --tt-aro:        rgba(240,232,208,0.58);
+  --tt-aro-lbl:    rgba(201,170,90,0.50);
+  --leg-text:      rgba(240,232,208,0.50);
+  --attr-text:     rgba(201,170,90,0.38);
+  --nm-bg-op:      0.10;
+  --seg-op-mult:   1;
+}
+
+/* ── LIGHT MODE ── */
+html.light {
+  --bg:            #faf8f2;
+  --header-title:  #6b4e10;
+  --header-sub:    rgba(107,78,16,0.55);
+  --badge-text:    rgba(107,78,16,0.60);
+  --badge-border:  rgba(107,78,16,0.25);
+  --ring-bold:     rgba(80,60,20,0.45);
+  --ring-soft:     rgba(80,60,20,0.18);
+  --divider:       rgba(80,60,20,0.40);
+  --divider-main:  rgba(80,60,20,0.80);
+  --divider-zero:  rgba(80,60,20,0.40);
+  --glow-bg:       rgba(201,170,90,0.06);
+  --glow-mid:      rgba(201,170,90,0.01);
+  --rim:           rgba(80,60,20,0.20);
+  --tick:          rgba(80,60,20,0.20);
+  --swara-lbl:     rgba(80,60,20,0.60);
+  --ctr-fill:      #f0ede4;
+  --ctr-stroke:    rgba(80,60,20,0.45);
+  --ctr-inner:     rgba(80,60,20,0.12);
+  --ctr-sp:        rgba(80,60,20,0.80);
+  --ctr-sub:       rgba(80,60,20,0.40);
+  --ctr-fixed:     rgba(80,60,20,0.25);
+  --name-text:     rgba(30,20,10,0.82);
+  --hit-hover:     rgba(0,0,0,0.04);
+  --tt-bg:         rgba(250,248,242,0.98);
+  --tt-border:     rgba(107,78,16,0.35);
+  --tt-n:          rgba(107,78,16,0.50);
+  --tt-name:       #2a1a05;
+  --tt-skt:        rgba(107,78,16,0.65);
+  --tt-sw:         rgba(30,20,10,0.80);
+  --tt-aro:        rgba(30,20,10,0.55);
+  --tt-aro-lbl:    rgba(107,78,16,0.55);
+  --leg-text:      rgba(30,20,10,0.55);
+  --attr-text:     rgba(107,78,16,0.45);
+  --nm-bg-op:      0.07;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;}
+
 body{
-  background:#07050a;
+  background: var(--bg);
   display:flex;flex-direction:column;align-items:center;
   min-height:100vh;
   font-family:'EB Garamond',serif;
+  transition: background 0.4s ease;
 }
 
-header{text-align:center;padding:28px 20px 6px;}
+/* ── HEADER ── */
+header{text-align:center;padding:28px 20px 6px;position:relative;}
 header h1{
   font-family:'Cinzel',serif;font-weight:700;
   font-size:clamp(1rem,2.6vw,1.75rem);
-  letter-spacing:0.25em;color:#c9aa5a;
+  letter-spacing:0.25em;color:var(--header-title);
   text-transform:uppercase;
+  transition:color 0.4s;
 }
 header p{
   font-family:'EB Garamond',serif;font-style:italic;
-  color:rgba(201,170,90,0.4);font-size:0.82rem;
+  color:var(--header-sub);font-size:0.82rem;
   letter-spacing:0.22em;margin-top:3px;
+  transition:color 0.4s;
 }
 .pi-badge{
   display:inline-block;margin-top:7px;
   font-family:'Cinzel',serif;font-size:0.6rem;
-  letter-spacing:0.18em;color:rgba(201,170,90,0.5);
-  border:1px solid rgba(201,170,90,0.2);
+  letter-spacing:0.18em;color:var(--badge-text);
+  border:1px solid var(--badge-border);
   border-radius:20px;padding:2px 12px;
+  transition:color 0.4s,border-color 0.4s;
 }
 
+/* ── TOGGLE BUTTON ── */
+.toggle-wrap{
+  position:fixed;top:16px;right:20px;z-index:1000;
+}
+.toggle-btn{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;
+  color:var(--badge-text);
+  background:var(--bg);
+  border:1px solid var(--ring-bold);
+  border-radius:20px;padding:7px 16px;
+  cursor:pointer;transition:background 0.3s,color 0.3s,border-color 0.3s;
+  text-transform:uppercase;
+  box-shadow:0 2px 14px rgba(0,0,0,0.35);
+}
+.toggle-btn:hover{ color:var(--header-title);border-color:var(--header-title); }
+.toggle-icon{font-size:0.95rem;line-height:1;}
+
+/* ── CHART ── */
 .wrap{width:min(95vw,840px);aspect-ratio:1;margin:6px auto 0;}
 svg{width:100%;height:100%;overflow:visible;}
 
+/* ── TOOLTIP ── */
 #tt{
-  position:fixed;background:rgba(7,5,10,0.97);
-  border:1px solid rgba(201,170,90,0.38);border-radius:7px;
+  position:fixed;
+  background:var(--tt-bg);
+  border:1px solid var(--tt-border);
+  border-radius:7px;
   padding:11px 15px;pointer-events:none;opacity:0;
   transition:opacity .15s;z-index:999;
   min-width:210px;max-width:265px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.75);
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
 }
 #tt.on{opacity:1;}
-.tt-n{font-family:'Cinzel',serif;font-size:.6rem;color:rgba(201,170,90,.5);letter-spacing:.15em;}
-.tt-name{font-family:'Cinzel',serif;font-size:.93rem;font-weight:600;color:#f0e8d0;
+.tt-n{font-family:'Cinzel',serif;font-size:.6rem;color:var(--tt-n);letter-spacing:.15em;}
+.tt-name{font-family:'Cinzel',serif;font-size:.93rem;font-weight:600;color:var(--tt-name);
   margin:2px 0 2px;line-height:1.3;}
-.tt-skt{font-family:'Noto Serif Devanagari',serif;font-style:normal;font-size:.85rem;
-  color:rgba(201,170,90,.6);margin-bottom:6px;}
-.tt-sw{font-size:.75rem;color:rgba(240,232,208,.82);letter-spacing:.04em;margin-bottom:4px;}
-.tt-aro{font-size:.71rem;color:rgba(240,232,208,.58);line-height:1.7;}
-.tt-aro span{color:rgba(201,170,90,.5);font-family:'Cinzel',serif;font-size:.56rem;
+.tt-skt{font-family:'Noto Serif Devanagari',serif;font-size:.85rem;
+  color:var(--tt-skt);margin-bottom:6px;}
+.tt-sw{font-size:.75rem;color:var(--tt-sw);letter-spacing:.04em;margin-bottom:4px;}
+.tt-aro{font-size:.71rem;color:var(--tt-aro);line-height:1.7;}
+.tt-aro span{color:var(--tt-aro-lbl);font-family:'Cinzel',serif;font-size:.56rem;
   letter-spacing:.1em;margin-right:4px;}
 .tt-ck{display:inline-block;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;
-  padding:2px 8px;border-radius:20px;margin-top:6px;color:#f0e8d0;
-  background:rgba(201,170,90,.1);border:1px solid rgba(201,170,90,.2);}
+  padding:2px 8px;border-radius:20px;margin-top:6px;color:var(--tt-name);
+  background:rgba(201,170,90,.08);border:1px solid rgba(201,170,90,.18);}
 
+/* ── FOOTER + ATTRIBUTION ── */
 footer{display:flex;flex-wrap:wrap;justify-content:center;
   gap:5px 18px;padding:12px 20px 6px;max-width:820px;}
 .leg{display:flex;align-items:center;gap:5px;font-family:'Cinzel',serif;
-  font-size:.59rem;color:rgba(240,232,208,.5);letter-spacing:.07em;}
+  font-size:.59rem;color:var(--leg-text);letter-spacing:.07em;
+  transition:color 0.4s;}
 .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.attribution{width:100%;text-align:center;padding:12px 0 28px;
+.attribution{
+  width:100%;text-align:center;padding:12px 0 28px;
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:0.78rem;color:rgba(201,170,90,0.38);letter-spacing:0.12em;}
+  font-size:0.78rem;color:var(--attr-text);
+  letter-spacing:0.12em;transition:color 0.4s;
+}
+
+/* ── PRINT STYLES ── */
+@media print {
+  html { background:#fff !important; }
+  body { background:#fff !important; }
+  .toggle-wrap { display:none !important; }
+  #tt { display:none !important; }
+  header h1 { color:#5a3c08 !important; }
+  header p, .pi-badge, .attribution { color:#7a5c20 !important; }
+  .leg { color:#333 !important; }
+}
 </style>
 </head>
 <body>
+
+<div class="toggle-wrap">
+  <button class="toggle-btn" id="toggleBtn" onclick="toggleMode()">
+    <span class="toggle-icon" id="toggleIcon">☀️</span>
+    <span id="toggleLabel">Light</span>
+  </button>
+</div>
 
 <header>
   <h1>Melakarta Mandala</h1>
@@ -84,79 +212,90 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
 <div class="attribution">Visualization by Lakshmi Ganesan</div>
 
 <script>
+// ── THEME TOGGLE
+let isLight = false;
+function toggleMode() {
+  isLight = !isLight;
+  document.documentElement.classList.toggle('light', isLight);
+  document.getElementById('toggleIcon').textContent = isLight ? '🌙' : '☀️';
+  document.getElementById('toggleLabel').textContent = isLight ? 'Dark' : 'Light';
+  redraw();
+}
+
+// ── DATA
 const DATA = [
-  {n:1,  name:"Kanakāṅgi",            skt:"कनकाङ्गि",           ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N1", aro:"S R1 G1 M1 P D1 N1 S", ava:"S N1 D1 P M1 G1 R1 S"},
-  {n:2,  name:"Ratnāṅgi",             skt:"रत्नाङ्गि",           ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N2", aro:"S R1 G1 M1 P D1 N2 S", ava:"S N2 D1 P M1 G1 R1 S"},
-  {n:3,  name:"Gānamūrti",            skt:"गानमूर्ति",           ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N3", aro:"S R1 G1 M1 P D1 N3 S", ava:"S N3 D1 P M1 G1 R1 S"},
-  {n:4,  name:"Vanaspati",            skt:"वनस्पति",             ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D2",N:"N2", aro:"S R1 G1 M1 P D2 N2 S", ava:"S N2 D2 P M1 G1 R1 S"},
-  {n:5,  name:"Mānavati",             skt:"मानवति",              ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D2",N:"N3", aro:"S R1 G1 M1 P D2 N3 S", ava:"S N3 D2 P M1 G1 R1 S"},
-  {n:6,  name:"Tānarūpi",             skt:"तानरूपि",             ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D3",N:"N3", aro:"S R1 G1 M1 P D3 N3 S", ava:"S N3 D3 P M1 G1 R1 S"},
-  {n:7,  name:"Sēnāvati",             skt:"सेनावति",             ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N1", aro:"S R1 G2 M1 P D1 N1 S", ava:"S N1 D1 P M1 G2 R1 S"},
-  {n:8,  name:"Hanumattoḍi",          skt:"हनुमत्तोडि",          ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R1 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R1 S"},
-  {n:9,  name:"Dhēnuka",              skt:"धेनुक",               ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N3", aro:"S R1 G2 M1 P D1 N3 S", ava:"S N3 D1 P M1 G2 R1 S"},
-  {n:10, name:"Nāṭakapriya",          skt:"नाटकप्रिय",           ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D2",N:"N2", aro:"S R1 G2 M1 P D2 N2 S", ava:"S N2 D2 P M1 G2 R1 S"},
-  {n:11, name:"Kōkilapriya",          skt:"कोकिलप्रिय",          ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D2",N:"N3", aro:"S R1 G2 M1 P D2 N3 S", ava:"S N3 D2 P M1 G2 R1 S"},
-  {n:12, name:"Rūpāvati",             skt:"रूपावति",             ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D3",N:"N3", aro:"S R1 G2 M1 P D3 N3 S", ava:"S N3 D3 P M1 G2 R1 S"},
-  {n:13, name:"Gāyakapriya",          skt:"गायकप्रिय",           ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R1 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R1 S"},
-  {n:14, name:"Vakulābharaṇam",       skt:"वकुलाभरणम्",          ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R1 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R1 S"},
-  {n:15, name:"Māyāmāḷavagauḷa",      skt:"मायामालवगौळ",         ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R1 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R1 S"},
-  {n:16, name:"Cakravākam",           skt:"चक्रवाकम्",           ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R1 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R1 S"},
-  {n:17, name:"Sūryakāntam",          skt:"सूर्यकान्तम्",        ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R1 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R1 S"},
-  {n:18, name:"Hāṭakāmbari",          skt:"हाटकाम्बरि",          ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R1 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R1 S"},
-  {n:19, name:"Jhaṅkāradhvani",       skt:"झङ्कारध्वनि",         ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N1", aro:"S R2 G2 M1 P D1 N1 S", ava:"S N1 D1 P M1 G2 R2 S"},
-  {n:20, name:"Naṭabhairavi",         skt:"नटभैरवि",             ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R2 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R2 S"},
-  {n:21, name:"Kīravāṇi",             skt:"कीरवाणि",             ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N3", aro:"S R2 G2 M1 P D1 N3 S", ava:"S N3 D1 P M1 G2 R2 S"},
-  {n:22, name:"Kharaharapriya",       skt:"खरहरप्रिय",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N2", aro:"S R2 G2 M1 P D2 N2 S", ava:"S N2 D2 P M1 G2 R2 S"},
-  {n:23, name:"Gaurīmanōhari",        skt:"गौरीमनोहरि",          ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N3", aro:"S R2 G2 M1 P D2 N3 S", ava:"S N3 D2 P M1 G2 R2 S"},
-  {n:24, name:"Varuṇapriya",          skt:"वरुणप्रिय",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D3",N:"N3", aro:"S R2 G2 M1 P D3 N3 S", ava:"S N3 D3 P M1 G2 R2 S"},
-  {n:25, name:"Mārarāñjani",          skt:"माररञ्जनि",           ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R2 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R2 S"},
-  {n:26, name:"Cārukēśi",             skt:"चारुकेशि",            ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R2 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R2 S"},
-  {n:27, name:"Sarasāṅgi",            skt:"सरसाङ्गि",            ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R2 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R2 S"},
-  {n:28, name:"Harikāmbhōji",         skt:"हरिकाम्भोजि",         ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R2 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R2 S"},
-  {n:29, name:"Dhīraśaṅkarābharaṇam", skt:"धीरशङ्कराभरणम्",      ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R2 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R2 S"},
-  {n:30, name:"Nāgānandini",          skt:"नागानन्दिनि",          ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R2 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R2 S"},
-  {n:31, name:"Yāgapriya",            skt:"यागप्रिय",             ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R3 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R3 S"},
-  {n:32, name:"Rāgacūḍāmaṇi",         skt:"रागचूडामणि",          ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R3 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R3 S"},
-  {n:33, name:"Gaṅgātarangiṇi",       skt:"गङ्गातरङ्गिणि",       ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R3 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R3 S"},
-  {n:34, name:"Bhāgavatapriya",       skt:"भागवतप्रिय",           ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R3 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R3 S"},
-  {n:35, name:"Śūlini",               skt:"शूलिनि",               ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R3 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R3 S"},
-  {n:36, name:"Calanāṭa",             skt:"चलनाट",               ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R3 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R3 S"},
-  {n:37, name:"Sālagam",              skt:"सालगम्",               ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N1", aro:"S R1 G1 M2 P D1 N1 S", ava:"S N1 D1 P M2 G1 R1 S"},
-  {n:38, name:"Jalārṇavam",           skt:"जलार्णवम्",            ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N2", aro:"S R1 G1 M2 P D1 N2 S", ava:"S N2 D1 P M2 G1 R1 S"},
-  {n:39, name:"Jhālavarāḷi",          skt:"झालवराळि",             ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N3", aro:"S R1 G1 M2 P D1 N3 S", ava:"S N3 D1 P M2 G1 R1 S"},
-  {n:40, name:"Navanītam",            skt:"नवनीतम्",              ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D2",N:"N2", aro:"S R1 G1 M2 P D2 N2 S", ava:"S N2 D2 P M2 G1 R1 S"},
-  {n:41, name:"Pāvani",               skt:"पावनि",                ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D2",N:"N3", aro:"S R1 G1 M2 P D2 N3 S", ava:"S N3 D2 P M2 G1 R1 S"},
-  {n:42, name:"Raghupriya",           skt:"रघुप्रिय",              ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D3",N:"N3", aro:"S R1 G1 M2 P D3 N3 S", ava:"S N3 D3 P M2 G1 R1 S"},
-  {n:43, name:"Gavāmbōdhi",           skt:"गवाम्बोधि",            ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N1", aro:"S R1 G2 M2 P D1 N1 S", ava:"S N1 D1 P M2 G2 R1 S"},
-  {n:44, name:"Bhavapriya",           skt:"भवप्रिय",              ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N2", aro:"S R1 G2 M2 P D1 N2 S", ava:"S N2 D1 P M2 G2 R1 S"},
-  {n:45, name:"Śubhapantuvarāḷi",     skt:"शुभपन्तुवराळि",        ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N3", aro:"S R1 G2 M2 P D1 N3 S", ava:"S N3 D1 P M2 G2 R1 S"},
-  {n:46, name:"Ṣaḍvidhamārgiṇi",      skt:"षड्विधमार्गिणि",       ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D2",N:"N2", aro:"S R1 G2 M2 P D2 N2 S", ava:"S N2 D2 P M2 G2 R1 S"},
-  {n:47, name:"Suvarṇāṅgi",           skt:"सुवर्णाङ्गि",          ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D2",N:"N3", aro:"S R1 G2 M2 P D2 N3 S", ava:"S N3 D2 P M2 G2 R1 S"},
-  {n:48, name:"Divyamaṇi",            skt:"दिव्यमणि",             ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D3",N:"N3", aro:"S R1 G2 M2 P D3 N3 S", ava:"S N3 D3 P M2 G2 R1 S"},
-  {n:49, name:"Dhavalāmbari",         skt:"धवलाम्बरि",            ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R1 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R1 S"},
-  {n:50, name:"Nāmanārāyaṇi",         skt:"नामनारायणि",           ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R1 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R1 S"},
-  {n:51, name:"Kāmavardhani",         skt:"कामवर्धनि",            ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R1 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R1 S"},
-  {n:52, name:"Rāmapriya",            skt:"रामप्रिय",              ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R1 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R1 S"},
-  {n:53, name:"Gamanāśrama",          skt:"गमनाश्रम",             ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R1 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R1 S"},
-  {n:54, name:"Viśvambhari",          skt:"विश्वम्भरि",            ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R1 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R1 S"},
-  {n:55, name:"Śyāmalāṅgi",           skt:"श्यामलाङ्गि",          ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N1", aro:"S R2 G2 M2 P D1 N1 S", ava:"S N1 D1 P M2 G2 R2 S"},
-  {n:56, name:"Ṣaṇmukhapriya",        skt:"षण्मुखप्रिय",          ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N2", aro:"S R2 G2 M2 P D1 N2 S", ava:"S N2 D1 P M2 G2 R2 S"},
-  {n:57, name:"Simhēndramadhyamam",   skt:"सिंहेन्द्रमध्यमम्",    ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N3", aro:"S R2 G2 M2 P D1 N3 S", ava:"S N3 D1 P M2 G2 R2 S"},
-  {n:58, name:"Hēmāvati",             skt:"हेमावति",              ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D2",N:"N2", aro:"S R2 G2 M2 P D2 N2 S", ava:"S N2 D2 P M2 G2 R2 S"},
-  {n:59, name:"Dharmāvati",           skt:"धर्मावति",              ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D2",N:"N3", aro:"S R2 G2 M2 P D2 N3 S", ava:"S N3 D2 P M2 G2 R2 S"},
-  {n:60, name:"Nītimati",             skt:"नीतिमति",              ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D3",N:"N3", aro:"S R2 G2 M2 P D3 N3 S", ava:"S N3 D3 P M2 G2 R2 S"},
-  {n:61, name:"Kāntāmaṇi",            skt:"कान्तामणि",            ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R2 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R2 S"},
-  {n:62, name:"Ṛṣabhapriya",          skt:"ऋषभप्रिय",             ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R2 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R2 S"},
-  {n:63, name:"Latāṅgi",              skt:"लताङ्गि",               ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R2 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R2 S"},
-  {n:64, name:"Vācaspati",            skt:"वाचस्पति",              ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R2 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R2 S"},
-  {n:65, name:"Mēcakalyāṇi",          skt:"मेचकळ्याणि",           ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R2 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R2 S"},
-  {n:66, name:"Citrāmbari",           skt:"चित्राम्बरि",           ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R2 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R2 S"},
-  {n:67, name:"Sucaritra",            skt:"सुचरित्र",              ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R3 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R3 S"},
-  {n:68, name:"Jyōtisvarūpiṇi",       skt:"ज्योतिस्वरूपिणि",      ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R3 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R3 S"},
-  {n:69, name:"Dhātuvardhini",        skt:"धातुवर्धिनि",           ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R3 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R3 S"},
-  {n:70, name:"Nāsikābhūṣaṇi",        skt:"नासिकाभूषणि",          ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R3 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R3 S"},
-  {n:71, name:"Kōsalā",               skt:"कोसला",                 ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R3 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R3 S"},
-  {n:72, name:"Rāsikapriya",          skt:"रसिकप्रिय",             ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R3 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R3 S"},
+  {n:1,  name:"Kanakāṅgi",            skt:"कनकाङ्गि",         ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N1", aro:"S R1 G1 M1 P D1 N1 S", ava:"S N1 D1 P M1 G1 R1 S"},
+  {n:2,  name:"Ratnāṅgi",             skt:"रत्नाङ्गि",         ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N2", aro:"S R1 G1 M1 P D1 N2 S", ava:"S N2 D1 P M1 G1 R1 S"},
+  {n:3,  name:"Gānamūrti",            skt:"गानमूर्ति",         ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D1",N:"N3", aro:"S R1 G1 M1 P D1 N3 S", ava:"S N3 D1 P M1 G1 R1 S"},
+  {n:4,  name:"Vanaspati",            skt:"वनस्पति",           ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D2",N:"N2", aro:"S R1 G1 M1 P D2 N2 S", ava:"S N2 D2 P M1 G1 R1 S"},
+  {n:5,  name:"Mānavati",             skt:"मानवति",            ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D2",N:"N3", aro:"S R1 G1 M1 P D2 N3 S", ava:"S N3 D2 P M1 G1 R1 S"},
+  {n:6,  name:"Tānarūpi",             skt:"तानरूपि",           ck:1,  cn:"INDU",   R:"R1",G:"G1",M:"M1",D:"D3",N:"N3", aro:"S R1 G1 M1 P D3 N3 S", ava:"S N3 D3 P M1 G1 R1 S"},
+  {n:7,  name:"Sēnāvati",             skt:"सेनावति",           ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N1", aro:"S R1 G2 M1 P D1 N1 S", ava:"S N1 D1 P M1 G2 R1 S"},
+  {n:8,  name:"Hanumattoḍi",          skt:"हनुमत्तोडि",        ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R1 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R1 S"},
+  {n:9,  name:"Dhēnuka",              skt:"धेनुक",             ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D1",N:"N3", aro:"S R1 G2 M1 P D1 N3 S", ava:"S N3 D1 P M1 G2 R1 S"},
+  {n:10, name:"Nāṭakapriya",          skt:"नाटकप्रिय",         ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D2",N:"N2", aro:"S R1 G2 M1 P D2 N2 S", ava:"S N2 D2 P M1 G2 R1 S"},
+  {n:11, name:"Kōkilapriya",          skt:"कोकिलप्रिय",        ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D2",N:"N3", aro:"S R1 G2 M1 P D2 N3 S", ava:"S N3 D2 P M1 G2 R1 S"},
+  {n:12, name:"Rūpāvati",             skt:"रूपावति",           ck:2,  cn:"NETRA",  R:"R1",G:"G2",M:"M1",D:"D3",N:"N3", aro:"S R1 G2 M1 P D3 N3 S", ava:"S N3 D3 P M1 G2 R1 S"},
+  {n:13, name:"Gāyakapriya",          skt:"गायकप्रिय",         ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R1 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R1 S"},
+  {n:14, name:"Vakulābharaṇam",       skt:"वकुलाभरणम्",        ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R1 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R1 S"},
+  {n:15, name:"Māyāmāḷavagauḷa",      skt:"मायामालवगौळ",       ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R1 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R1 S"},
+  {n:16, name:"Cakravākam",           skt:"चक्रवाकम्",         ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R1 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R1 S"},
+  {n:17, name:"Sūryakāntam",          skt:"सूर्यकान्तम्",      ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R1 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R1 S"},
+  {n:18, name:"Hāṭakāmbari",          skt:"हाटकाम्बरि",        ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R1 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R1 S"},
+  {n:19, name:"Jhaṅkāradhvani",       skt:"झङ्कारध्वनि",       ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N1", aro:"S R2 G2 M1 P D1 N1 S", ava:"S N1 D1 P M1 G2 R2 S"},
+  {n:20, name:"Naṭabhairavi",         skt:"नटभैरवि",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R2 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R2 S"},
+  {n:21, name:"Kīravāṇi",             skt:"कीरवाणि",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N3", aro:"S R2 G2 M1 P D1 N3 S", ava:"S N3 D1 P M1 G2 R2 S"},
+  {n:22, name:"Kharaharapriya",       skt:"खरहरप्रिय",         ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N2", aro:"S R2 G2 M1 P D2 N2 S", ava:"S N2 D2 P M1 G2 R2 S"},
+  {n:23, name:"Gaurīmanōhari",        skt:"गौरीमनोहरि",        ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N3", aro:"S R2 G2 M1 P D2 N3 S", ava:"S N3 D2 P M1 G2 R2 S"},
+  {n:24, name:"Varuṇapriya",          skt:"वरुणप्रिय",         ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D3",N:"N3", aro:"S R2 G2 M1 P D3 N3 S", ava:"S N3 D3 P M1 G2 R2 S"},
+  {n:25, name:"Mārarāñjani",          skt:"माररञ्जनि",         ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R2 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R2 S"},
+  {n:26, name:"Cārukēśi",             skt:"चारुकेशि",          ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R2 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R2 S"},
+  {n:27, name:"Sarasāṅgi",            skt:"सरसाङ्गि",          ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R2 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R2 S"},
+  {n:28, name:"Harikāmbhōji",         skt:"हरिकाम्भोजि",       ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R2 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R2 S"},
+  {n:29, name:"Dhīraśaṅkarābharaṇam", skt:"धीरशङ्कराभरणम्",    ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R2 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R2 S"},
+  {n:30, name:"Nāgānandini",          skt:"नागानन्दिनि",        ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R2 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R2 S"},
+  {n:31, name:"Yāgapriya",            skt:"यागप्रिय",           ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R3 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R3 S"},
+  {n:32, name:"Rāgacūḍāmaṇi",         skt:"रागचूडामणि",        ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R3 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R3 S"},
+  {n:33, name:"Gaṅgātarangiṇi",       skt:"गङ्गातरङ्गिणि",     ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R3 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R3 S"},
+  {n:34, name:"Bhāgavatapriya",       skt:"भागवतप्रिय",         ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R3 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R3 S"},
+  {n:35, name:"Śūlini",               skt:"शूलिनि",             ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R3 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R3 S"},
+  {n:36, name:"Calanāṭa",             skt:"चलनाट",             ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R3 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R3 S"},
+  {n:37, name:"Sālagam",              skt:"सालगम्",             ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N1", aro:"S R1 G1 M2 P D1 N1 S", ava:"S N1 D1 P M2 G1 R1 S"},
+  {n:38, name:"Jalārṇavam",           skt:"जलार्णवम्",          ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N2", aro:"S R1 G1 M2 P D1 N2 S", ava:"S N2 D1 P M2 G1 R1 S"},
+  {n:39, name:"Jhālavarāḷi",          skt:"झालवराळि",           ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D1",N:"N3", aro:"S R1 G1 M2 P D1 N3 S", ava:"S N3 D1 P M2 G1 R1 S"},
+  {n:40, name:"Navanītam",            skt:"नवनीतम्",            ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D2",N:"N2", aro:"S R1 G1 M2 P D2 N2 S", ava:"S N2 D2 P M2 G1 R1 S"},
+  {n:41, name:"Pāvani",               skt:"पावनि",              ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D2",N:"N3", aro:"S R1 G1 M2 P D2 N3 S", ava:"S N3 D2 P M2 G1 R1 S"},
+  {n:42, name:"Raghupriya",           skt:"रघुप्रिय",            ck:7,  cn:"RISHI",  R:"R1",G:"G1",M:"M2",D:"D3",N:"N3", aro:"S R1 G1 M2 P D3 N3 S", ava:"S N3 D3 P M2 G1 R1 S"},
+  {n:43, name:"Gavāmbōdhi",           skt:"गवाम्बोधि",          ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N1", aro:"S R1 G2 M2 P D1 N1 S", ava:"S N1 D1 P M2 G2 R1 S"},
+  {n:44, name:"Bhavapriya",           skt:"भवप्रिय",            ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N2", aro:"S R1 G2 M2 P D1 N2 S", ava:"S N2 D1 P M2 G2 R1 S"},
+  {n:45, name:"Śubhapantuvarāḷi",     skt:"शुभपन्तुवराळि",      ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D1",N:"N3", aro:"S R1 G2 M2 P D1 N3 S", ava:"S N3 D1 P M2 G2 R1 S"},
+  {n:46, name:"Ṣaḍvidhamārgiṇi",      skt:"षड्विधमार्गिणि",     ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D2",N:"N2", aro:"S R1 G2 M2 P D2 N2 S", ava:"S N2 D2 P M2 G2 R1 S"},
+  {n:47, name:"Suvarṇāṅgi",           skt:"सुवर्णाङ्गि",        ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D2",N:"N3", aro:"S R1 G2 M2 P D2 N3 S", ava:"S N3 D2 P M2 G2 R1 S"},
+  {n:48, name:"Divyamaṇi",            skt:"दिव्यमणि",           ck:8,  cn:"VASU",   R:"R1",G:"G2",M:"M2",D:"D3",N:"N3", aro:"S R1 G2 M2 P D3 N3 S", ava:"S N3 D3 P M2 G2 R1 S"},
+  {n:49, name:"Dhavalāmbari",         skt:"धवलाम्बरि",          ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R1 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R1 S"},
+  {n:50, name:"Nāmanārāyaṇi",         skt:"नामनारायणि",         ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R1 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R1 S"},
+  {n:51, name:"Kāmavardhani",         skt:"कामवर्धनि",          ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R1 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R1 S"},
+  {n:52, name:"Rāmapriya",            skt:"रामप्रिय",            ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R1 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R1 S"},
+  {n:53, name:"Gamanāśrama",          skt:"गमनाश्रम",           ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R1 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R1 S"},
+  {n:54, name:"Viśvambhari",          skt:"विश्वम्भरि",          ck:9,  cn:"BRAHMA", R:"R1",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R1 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R1 S"},
+  {n:55, name:"Śyāmalāṅgi",           skt:"श्यामलाङ्गि",        ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N1", aro:"S R2 G2 M2 P D1 N1 S", ava:"S N1 D1 P M2 G2 R2 S"},
+  {n:56, name:"Ṣaṇmukhapriya",        skt:"षण्मुखप्रिय",        ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N2", aro:"S R2 G2 M2 P D1 N2 S", ava:"S N2 D1 P M2 G2 R2 S"},
+  {n:57, name:"Simhēndramadhyamam",   skt:"सिंहेन्द्रमध्यमम्",  ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D1",N:"N3", aro:"S R2 G2 M2 P D1 N3 S", ava:"S N3 D1 P M2 G2 R2 S"},
+  {n:58, name:"Hēmāvati",             skt:"हेमावति",            ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D2",N:"N2", aro:"S R2 G2 M2 P D2 N2 S", ava:"S N2 D2 P M2 G2 R2 S"},
+  {n:59, name:"Dharmāvati",           skt:"धर्मावति",            ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D2",N:"N3", aro:"S R2 G2 M2 P D2 N3 S", ava:"S N3 D2 P M2 G2 R2 S"},
+  {n:60, name:"Nītimati",             skt:"नीतिमति",            ck:10, cn:"DISHI",  R:"R2",G:"G2",M:"M2",D:"D3",N:"N3", aro:"S R2 G2 M2 P D3 N3 S", ava:"S N3 D3 P M2 G2 R2 S"},
+  {n:61, name:"Kāntāmaṇi",            skt:"कान्तामणि",          ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R2 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R2 S"},
+  {n:62, name:"Ṛṣabhapriya",          skt:"ऋषभप्रिय",           ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R2 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R2 S"},
+  {n:63, name:"Latāṅgi",              skt:"लताङ्गि",             ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R2 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R2 S"},
+  {n:64, name:"Vācaspati",            skt:"वाचस्पति",            ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R2 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R2 S"},
+  {n:65, name:"Mēcakalyāṇi",          skt:"मेचकळ्याणि",         ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R2 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R2 S"},
+  {n:66, name:"Citrāmbari",           skt:"चित्राम्बरि",         ck:11, cn:"RUDRA",  R:"R2",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R2 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R2 S"},
+  {n:67, name:"Sucaritra",            skt:"सुचरित्र",            ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N1", aro:"S R3 G3 M2 P D1 N1 S", ava:"S N1 D1 P M2 G3 R3 S"},
+  {n:68, name:"Jyōtisvarūpiṇi",       skt:"ज्योतिस्वरूपिणि",    ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N2", aro:"S R3 G3 M2 P D1 N2 S", ava:"S N2 D1 P M2 G3 R3 S"},
+  {n:69, name:"Dhātuvardhini",        skt:"धातुवर्धिनि",         ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D1",N:"N3", aro:"S R3 G3 M2 P D1 N3 S", ava:"S N3 D1 P M2 G3 R3 S"},
+  {n:70, name:"Nāsikābhūṣaṇi",        skt:"नासिकाभूषणि",        ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D2",N:"N2", aro:"S R3 G3 M2 P D2 N2 S", ava:"S N2 D2 P M2 G3 R3 S"},
+  {n:71, name:"Kōsalā",               skt:"कोसला",               ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D2",N:"N3", aro:"S R3 G3 M2 P D2 N3 S", ava:"S N3 D2 P M2 G3 R3 S"},
+  {n:72, name:"Rāsikapriya",          skt:"रसिकप्रिय",           ck:12, cn:"ADITYA", R:"R3",G:"G3",M:"M2",D:"D3",N:"N3", aro:"S R3 G3 M2 P D3 N3 S", ava:"S N3 D3 P M2 G3 R3 S"},
 ];
 
 const CKC={1:'#d4595a',2:'#b068cc',3:'#52c490',4:'#5580d4',5:'#d4a83a',6:'#d45aad',
@@ -164,7 +303,6 @@ const CKC={1:'#d4595a',2:'#b068cc',3:'#52c490',4:'#5580d4',5:'#d4a83a',6:'#d45aa
 const CKN={1:'INDU',2:'NETRA',3:'AGNI',4:'VEDA',5:'BANA',6:'RUTU',
            7:'RISHI',8:'VASU',9:'BRAHMA',10:'DISHI',11:'RUDRA',12:'ADITYA'};
 const VO={'1':0.20,'2':0.50,'3':0.88};
-
 const K={ctrR:44,mI:52,mO:96,rI:100,rO:140,gI:144,gO:184,dI:188,dO:228,nI:232,nO:274,nmI:278,nmO:378,ckLbl:390,rim:396};
 const SEG=360/72, GAP=0.35;
 
@@ -175,125 +313,152 @@ function AP(r1,r2,aS,aE){
   const P=(r,a)=>`${+(r*Math.cos(a)).toFixed(3)},${+(r*Math.sin(a)).toFixed(3)}`;
   return `M${P(r1,s)}L${P(r2,s)}A${r2},${r2},0,${lg},1,${P(r2,e2)}L${P(r1,e2)}A${r1},${r1},0,${lg},0,${P(r1,s)}Z`;
 }
-function circ(r,stroke,sw){SV.appendChild(mk('circle',{cx:0,cy:0,r,fill:'none',stroke,'stroke-width':sw}));}
 
-// Background
-const defs=mk('defs');
-const rg=mk('radialGradient',{id:'bg',cx:'50%',cy:'50%',r:'50%'});
-[[0,'rgba(201,170,90,0.08)'],[.55,'rgba(201,170,90,0.02)'],[1,'rgba(0,0,0,0)']].forEach(([o,c])=>{
-  const s=mk('stop',{offset:o});s.setAttribute('stop-color',c);rg.appendChild(s);});
-defs.appendChild(rg);SV.appendChild(defs);
-SV.appendChild(mk('circle',{cx:0,cy:0,r:K.rim+14,fill:'url(#bg)'}));
+// ── Get current CSS variable value
+function cv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
-// Ring borders
-const G='rgba(201,170,90,0.2)',GB='rgba(201,170,90,0.45)';
-[K.mI,K.mO,K.rI,K.rO,K.gI,K.gO,K.dI,K.dO,K.nI,K.nO,K.nmI,K.nmO].forEach(r=>{
-  const b=(r===K.mI||r===K.nmO);circ(r,b?GB:G,b?1.3:0.55);});
-circ(K.rim,'rgba(201,170,90,0.18)',2.5);
-
-// Tick marks
-for(let i=0;i<72;i++){
-  const a=(i*SEG-90)*Math.PI/180;
-  SV.appendChild(mk('line',{x1:+(Math.cos(a)*(K.rim+1)).toFixed(2),y1:+(Math.sin(a)*(K.rim+1)).toFixed(2),
-    x2:+(Math.cos(a)*(K.rim+6)).toFixed(2),y2:+(Math.sin(a)*(K.rim+6)).toFixed(2),
-    stroke:'rgba(201,170,90,0.22)','stroke-width':0.7}));
+function redraw(){
+  while(SV.firstChild) SV.removeChild(SV.firstChild);
+  buildChart();
 }
 
-const gM=mk('g'),gR=mk('g'),gG=mk('g'),gD=mk('g'),gN=mk('g'),gNm=mk('g'),gLbl=mk('g'),gHit=mk('g');
-[gM,gR,gG,gD,gN,gNm,gLbl,gHit].forEach(g=>SV.appendChild(g));
+function buildChart(){
+  const light = isLight;
 
-DATA.forEach((r,i)=>{
-  const col=CKC[r.ck];
-  const aS=i*SEG+GAP/2, aE=(i+1)*SEG-GAP/2, midA=(i+0.5)*SEG;
-  const flip=midA>180, rot=flip?midA-90+180:midA-90;
-  const mRad=(midA-90)*Math.PI/180;
-  const seg=(r1,r2,fill,op)=>mk('path',{d:AP(r1,r2,aS,aE),fill,'fill-opacity':op,stroke:fill,'stroke-width':0.35,'stroke-opacity':0.35});
+  // Background glow
+  const defs=mk('defs');
+  const rg=mk('radialGradient',{id:'bg',cx:'50%',cy:'50%',r:'50%'});
+  [[0,cv('--glow-bg')],[.55,cv('--glow-mid')],[1,'rgba(0,0,0,0)']].forEach(([o,c])=>{
+    const s=mk('stop',{offset:o});s.setAttribute('stop-color',c);rg.appendChild(s);});
+  defs.appendChild(rg);SV.appendChild(defs);
+  SV.appendChild(mk('circle',{cx:0,cy:0,r:K.rim+14,fill:'url(#bg)'}));
 
-  const mFill=r.M==='M1'?'#d4913a':'#3a8ed4';
-  gM.appendChild(seg(K.mI,K.mO,mFill,r.M==='M1'?0.58:0.62));
-  gR.appendChild(seg(K.rI,K.rO,col,VO[r.R.slice(1)]));
-  gG.appendChild(seg(K.gI,K.gO,col,VO[r.G.slice(1)]));
-  gD.appendChild(seg(K.dI,K.dO,col,VO[r.D.slice(1)]));
-  gN.appendChild(seg(K.nI,K.nO,col,VO[r.N.slice(1)]));
-  gNm.appendChild(seg(K.nmI,K.nmO,col,0.10));
+  // Ring borders
+  const RB=cv('--ring-bold'), RS=cv('--ring-soft');
+  [K.mI,K.mO,K.rI,K.rO,K.gI,K.gO,K.dI,K.dO,K.nI,K.nO,K.nmI,K.nmO].forEach(r=>{
+    const b=(r===K.mI||r===K.nmO);
+    SV.appendChild(mk('circle',{cx:0,cy:0,r,fill:'none',stroke:b?RB:RS,'stroke-width':b?1.3:0.55}));
+  });
+  SV.appendChild(mk('circle',{cx:0,cy:0,r:K.rim,fill:'none',stroke:cv('--rim'),'stroke-width':2.5}));
 
-  const nR=K.nmI+12,[nx,ny]=[nR*Math.cos(mRad),nR*Math.sin(mRad)];
-  const nt=mk('text',{x:nx,y:ny,fill:col,'font-family':'Cinzel,serif','font-size':'6.5','font-weight':'700',
-    'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${nx},${ny})`});
-  nt.textContent=r.n; gLbl.appendChild(nt);
+  // Ticks
+  for(let i=0;i<72;i++){
+    const a=(i*SEG-90)*Math.PI/180;
+    SV.appendChild(mk('line',{x1:+(Math.cos(a)*(K.rim+1)).toFixed(2),y1:+(Math.sin(a)*(K.rim+1)).toFixed(2),
+      x2:+(Math.cos(a)*(K.rim+6)).toFixed(2),y2:+(Math.sin(a)*(K.rim+6)).toFixed(2),
+      stroke:cv('--tick'),'stroke-width':0.7}));
+  }
 
-  const nmR=K.nmI+38,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
-  let dn=r.name; if(dn.length>15)dn=dn.slice(0,14)+'…';
-  const nmt=mk('text',{x:tx,y:ty,fill:'rgba(240,232,208,0.84)','font-family':'EB Garamond,serif','font-size':'7.2',
-    'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${tx},${ty})`});
-  nmt.textContent=dn; gLbl.appendChild(nmt);
+  const gM=mk('g'),gR=mk('g'),gG=mk('g'),gD=mk('g'),gN=mk('g'),gNm=mk('g'),gLbl=mk('g'),gHit=mk('g');
+  [gM,gR,gG,gD,gN,gNm,gLbl,gHit].forEach(g=>SV.appendChild(g));
 
-  // Sanskrit name (innermost, very small)
-  const sktR=K.nmI+62,[sx,sy]=[sktR*Math.cos(mRad),sktR*Math.sin(mRad)];
-  const snmt=mk('text',{x:sx,y:sy,fill:`${col}88`,'font-family':'Noto Serif Devanagari,serif','font-size':'6',
-    'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${sx},${sy})`});
-  snmt.textContent=r.skt; gLbl.appendChild(snmt);
+  // Segment opacity — slightly higher in light mode for contrast
+  const opMult = light ? 1.15 : 1.0;
 
-  const hit=mk('path',{d:AP(K.mI,K.nmO,aS,aE),fill:'transparent',stroke:'none',cursor:'pointer'});
-  hit.addEventListener('mouseenter',e=>{showTT(e,r);hit.setAttribute('fill','rgba(255,255,255,0.045)');});
-  hit.addEventListener('mousemove',moveTT);
-  hit.addEventListener('mouseleave',()=>{hideTT();hit.setAttribute('fill','transparent');});
-  gHit.appendChild(hit);
-});
+  DATA.forEach((r,i)=>{
+    const col=CKC[r.ck];
+    const aS=i*SEG+GAP/2, aE=(i+1)*SEG-GAP/2, midA=(i+0.5)*SEG;
+    const flip=midA>180, rot=flip?midA-90+180:midA-90;
+    const mRad=(midA-90)*Math.PI/180;
+    const seg=(r1,r2,fill,op)=>mk('path',{d:AP(r1,r2,aS,aE),fill,
+      'fill-opacity':Math.min(1,op*opMult),stroke:fill,'stroke-width':0.35,'stroke-opacity':0.4});
 
-// Chakra dividers + labels
-for(let c=0;c<12;c++){
-  const a=(c*30-90)*Math.PI/180;
-  SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(a)).toFixed(2),y1:+(K.mI*Math.sin(a)).toFixed(2),
-    x2:+(K.nmO*Math.cos(a)).toFixed(2),y2:+(K.nmO*Math.sin(a)).toFixed(2),
-    stroke:'rgba(201,170,90,0.52)','stroke-width':1.1}));
-  const midA=(c+0.5)*30, ar=(midA-90)*Math.PI/180;
-  const flip=midA>180,rot=flip?midA-90+180:midA-90;
-  const[cx,cy]=[K.ckLbl*Math.cos(ar),K.ckLbl*Math.sin(ar)];
-  const ct=mk('text',{x:cx,y:cy,fill:CKC[c+1],'font-family':'Cinzel,serif','font-size':'7.8','font-weight':'600',
-    'letter-spacing':'1.2','text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${cx},${cy})`});
-  ct.textContent=CKN[c+1]; SV.appendChild(ct);
+    const mFill=r.M==='M1'?'#d4913a':'#3a8ed4';
+    gM.appendChild(seg(K.mI,K.mO,mFill,r.M==='M1'?0.60:0.65));
+    gR.appendChild(seg(K.rI,K.rO,col,VO[r.R.slice(1)]));
+    gG.appendChild(seg(K.gI,K.gO,col,VO[r.G.slice(1)]));
+    gD.appendChild(seg(K.dI,K.dO,col,VO[r.D.slice(1)]));
+    gN.appendChild(seg(K.nI,K.nO,col,VO[r.N.slice(1)]));
+    gNm.appendChild(mk('path',{d:AP(K.nmI,K.nmO,aS,aE),fill:col,
+      'fill-opacity':light?0.07:0.10,stroke:col,'stroke-width':0.35,'stroke-opacity':0.3}));
+
+    // Number
+    const nR=K.nmI+12,[nx,ny]=[nR*Math.cos(mRad),nR*Math.sin(mRad)];
+    const nt=mk('text',{x:nx,y:ny,fill:light?col+'dd':col,
+      'font-family':'Cinzel,serif','font-size':'6.5','font-weight':'700',
+      'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${nx},${ny})`});
+    nt.textContent=r.n; gLbl.appendChild(nt);
+
+    // Raga name
+    const nmR=K.nmI+38,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
+    let dn=r.name; if(dn.length>15)dn=dn.slice(0,14)+'…';
+    const nmt=mk('text',{x:tx,y:ty,fill:light?'rgba(20,12,4,0.80)':cv('--name-text'),
+      'font-family':'EB Garamond,serif','font-size':'7.2',
+      'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${tx},${ty})`});
+    nmt.textContent=dn; gLbl.appendChild(nmt);
+
+    // Sanskrit name
+    const sktR=K.nmI+62,[sx,sy]=[sktR*Math.cos(mRad),sktR*Math.sin(mRad)];
+    const snmt=mk('text',{x:sx,y:sy,fill:light?`${col}aa`:`${col}88`,
+      'font-family':'Noto Serif Devanagari,serif','font-size':'6',
+      'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${sx},${sy})`});
+    snmt.textContent=r.skt; gLbl.appendChild(snmt);
+
+    // Hit
+    const hit=mk('path',{d:AP(K.mI,K.nmO,aS,aE),fill:'transparent',stroke:'none',cursor:'pointer'});
+    hit.addEventListener('mouseenter',e=>{showTT(e,r);hit.setAttribute('fill',cv('--hit-hover'));});
+    hit.addEventListener('mousemove',moveTT);
+    hit.addEventListener('mouseleave',()=>{hideTT();hit.setAttribute('fill','transparent');});
+    gHit.appendChild(hit);
+  });
+
+  // Chakra dividers + labels
+  for(let c=0;c<12;c++){
+    const a=(c*30-90)*Math.PI/180;
+    SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(a)).toFixed(2),y1:+(K.mI*Math.sin(a)).toFixed(2),
+      x2:+(K.nmO*Math.cos(a)).toFixed(2),y2:+(K.nmO*Math.sin(a)).toFixed(2),
+      stroke:cv('--divider'),'stroke-width':1.1}));
+    const midA=(c+0.5)*30, ar=(midA-90)*Math.PI/180;
+    const flip=midA>180,rot=flip?midA-90+180:midA-90;
+    const[cx,cy]=[K.ckLbl*Math.cos(ar),K.ckLbl*Math.sin(ar)];
+    const ct=mk('text',{x:cx,y:cy,fill:CKC[c+1],
+      'font-family':'Cinzel,serif','font-size':'7.8','font-weight':'600',
+      'letter-spacing':'1.2','text-anchor':'middle','dominant-baseline':'middle',
+      transform:`rotate(${rot},${cx},${cy})`});
+    ct.textContent=CKN[c+1]; SV.appendChild(ct);
+  }
+
+  // M1/M2 split
+  const mDA=(180-90)*Math.PI/180;
+  SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(mDA)).toFixed(2),y1:+(K.mI*Math.sin(mDA)).toFixed(2),
+    x2:+(K.nmO*Math.cos(mDA)).toFixed(2),y2:+(K.nmO*Math.sin(mDA)).toFixed(2),
+    stroke:cv('--divider-main'),'stroke-width':2.5}));
+  const zDA=(0-90)*Math.PI/180;
+  SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(zDA)).toFixed(2),y1:+(K.mI*Math.sin(zDA)).toFixed(2),
+    x2:+(K.nmO*Math.cos(zDA)).toFixed(2),y2:+(K.nmO*Math.sin(zDA)).toFixed(2),
+    stroke:cv('--divider-zero'),'stroke-width':1.5}));
+
+  [{y:-68,txt:'M1',col:'#d4913a'},{y:68,txt:'M2',col:'#3a8ed4'}].forEach(({y,txt,col})=>{
+    const t=mk('text',{x:0,y,fill:col,'font-family':'Cinzel,serif','font-size':'9.5','font-weight':'700',
+      'text-anchor':'middle','dominant-baseline':'middle','letter-spacing':'1'});
+    t.textContent=txt; SV.appendChild(t);
+  });
+
+  // Swara ring labels
+  [{r:(K.mI+K.mO)/2,lbl:'M'},{r:(K.rI+K.rO)/2,lbl:'R'},{r:(K.gI+K.gO)/2,lbl:'G'},
+   {r:(K.dI+K.dO)/2,lbl:'D'},{r:(K.nI+K.nO)/2,lbl:'N'}].forEach(({r,lbl})=>{
+    const ang=359.4,a=(ang-90)*Math.PI/180,[x,y]=[r*Math.cos(a),r*Math.sin(a)];
+    const t=mk('text',{x,y,fill:cv('--swara-lbl'),'font-family':'Cinzel,serif',
+      'font-size':'7.5','font-weight':'600','text-anchor':'middle','dominant-baseline':'middle',
+      transform:`rotate(${ang-90},${x},${y})`});
+    t.textContent=lbl; SV.appendChild(t);
+  });
+
+  // Centre
+  SV.appendChild(mk('circle',{cx:0,cy:0,r:K.ctrR,fill:cv('--ctr-fill'),stroke:cv('--ctr-stroke'),'stroke-width':1.4}));
+  SV.appendChild(mk('circle',{cx:0,cy:0,r:K.ctrR-8,fill:'none',stroke:cv('--ctr-inner'),'stroke-width':0.8}));
+  const ctL=mk('text',{x:0,y:-7,fill:cv('--ctr-sp'),'font-family':'Cinzel,serif','font-size':'12',
+    'font-weight':'700','text-anchor':'middle','dominant-baseline':'middle','letter-spacing':'3'});
+  ctL.textContent='S · P'; SV.appendChild(ctL);
+  const ctS=mk('text',{x:0,y:10,fill:cv('--ctr-sub'),'font-family':'EB Garamond,serif','font-size':'7',
+    'font-style':'italic','text-anchor':'middle','dominant-baseline':'middle'});
+  ctS.textContent='Shadja · Panchama'; SV.appendChild(ctS);
+  const ctF=mk('text',{x:0,y:21,fill:cv('--ctr-fixed'),'font-family':'Cinzel,serif','font-size':'5.5',
+    'letter-spacing':'1','text-anchor':'middle','dominant-baseline':'middle'});
+  ctF.textContent='FIXED'; SV.appendChild(ctF);
 }
 
-// M1/M2 split line at 180°
-const mDA=(180-90)*Math.PI/180;
-SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(mDA)).toFixed(2),y1:+(K.mI*Math.sin(mDA)).toFixed(2),
-  x2:+(K.nmO*Math.cos(mDA)).toFixed(2),y2:+(K.nmO*Math.sin(mDA)).toFixed(2),
-  stroke:'rgba(201,170,90,0.9)','stroke-width':2.5}));
-const zDA=(0-90)*Math.PI/180;
-SV.appendChild(mk('line',{x1:+(K.mI*Math.cos(zDA)).toFixed(2),y1:+(K.mI*Math.sin(zDA)).toFixed(2),
-  x2:+(K.nmO*Math.cos(zDA)).toFixed(2),y2:+(K.nmO*Math.sin(zDA)).toFixed(2),
-  stroke:'rgba(201,170,90,0.5)','stroke-width':1.5}));
-
-[{y:-68,txt:'M1',col:'#d4913a'},{y:68,txt:'M2',col:'#3a8ed4'}].forEach(({y,txt,col})=>{
-  const t=mk('text',{x:0,y,fill:col,'font-family':'Cinzel,serif','font-size':'9.5','font-weight':'700',
-    'text-anchor':'middle','dominant-baseline':'middle','letter-spacing':'1'});
-  t.textContent=txt; SV.appendChild(t);
-});
-
-// Swara ring labels at ~359°
-[{r:(K.mI+K.mO)/2,lbl:'M'},{r:(K.rI+K.rO)/2,lbl:'R'},{r:(K.gI+K.gO)/2,lbl:'G'},
- {r:(K.dI+K.dO)/2,lbl:'D'},{r:(K.nI+K.nO)/2,lbl:'N'}].forEach(({r,lbl})=>{
-  const ang=359.4,a=(ang-90)*Math.PI/180,[x,y]=[r*Math.cos(a),r*Math.sin(a)];
-  const t=mk('text',{x,y,fill:'rgba(201,170,90,0.65)','font-family':'Cinzel,serif','font-size':'7.5','font-weight':'600',
-    'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${ang-90},${x},${y})`});
-  t.textContent=lbl; SV.appendChild(t);
-});
-
-// Centre
-SV.appendChild(mk('circle',{cx:0,cy:0,r:K.ctrR,fill:'#0b0910',stroke:'rgba(201,170,90,0.42)','stroke-width':1.4}));
-SV.appendChild(mk('circle',{cx:0,cy:0,r:K.ctrR-8,fill:'none',stroke:'rgba(201,170,90,0.10)','stroke-width':0.8}));
-const ctL=mk('text',{x:0,y:-7,fill:'rgba(201,170,90,0.82)','font-family':'Cinzel,serif','font-size':'12','font-weight':'700',
-  'text-anchor':'middle','dominant-baseline':'middle','letter-spacing':'3'});
-ctL.textContent='S · P'; SV.appendChild(ctL);
-const ctS=mk('text',{x:0,y:10,fill:'rgba(201,170,90,0.32)','font-family':'EB Garamond,serif','font-size':'7','font-style':'italic',
-  'text-anchor':'middle','dominant-baseline':'middle'});
-ctS.textContent='Shadja · Panchama'; SV.appendChild(ctS);
-const ctF=mk('text',{x:0,y:21,fill:'rgba(201,170,90,0.2)','font-family':'Cinzel,serif','font-size':'5.5','letter-spacing':'1',
-  'text-anchor':'middle','dominant-baseline':'middle'});
-ctF.textContent='FIXED'; SV.appendChild(ctF);
-
-// Tooltip
+// ── Tooltip
 const ttEl=document.getElementById('tt');
 function showTT(e,r){
   const col=CKC[r.ck];
@@ -309,18 +474,21 @@ function showTT(e,r){
 function moveTT(e){
   let x=e.clientX+14,y=e.clientY+14;
   if(x+270>window.innerWidth)x=e.clientX-280;
-  if(y+190>window.innerHeight)y=e.clientY-200;
+  if(y+195>window.innerHeight)y=e.clientY-205;
   ttEl.style.left=x+'px';ttEl.style.top=y+'px';
 }
 function hideTT(){ttEl.classList.remove('on');}
 
-// Legend
+// ── Legend
 const footer=document.getElementById('footer');
 for(let c=1;c<=12;c++){
   const d=document.createElement('div');d.className='leg';
   d.innerHTML=`<div class="leg-dot" style="background:${CKC[c]}"></div>${c}. ${CKN[c]}`;
   footer.appendChild(d);
 }
+
+// ── Initial draw
+buildChart();
 </script>
 </body>
 </html>
