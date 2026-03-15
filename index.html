@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Melakarta Mandala · v1.0</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+Devanagari:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+Devanagari:wght@400;500&display=swap');
 
 /* ── CSS VARIABLES — dark (default) ── */
 :root {
@@ -90,7 +90,7 @@ body{
   background: var(--bg);
   display:flex;flex-direction:column;align-items:center;
   min-height:100vh;
-  font-family:'EB Garamond',serif;
+  font-family:'Gentium Plus',serif;
   transition: background 0.4s ease;
 }
 
@@ -104,7 +104,7 @@ header h1{
   transition:color 0.4s;
 }
 header p{
-  font-family:'EB Garamond',serif;font-style:italic;
+  font-family:'Gentium Plus',serif;font-style:italic;
   color:var(--header-sub);font-size:0.82rem;
   letter-spacing:0.22em;margin-top:3px;
   transition:color 0.4s;
@@ -153,7 +153,7 @@ svg{width:100%;height:100%;overflow:visible;}
 }
 #tt.on{opacity:1;}
 .tt-n{font-family:'Cinzel',serif;font-size:.6rem;color:var(--tt-n);letter-spacing:.15em;}
-.tt-name{font-family:'Cinzel',serif;font-size:.93rem;font-weight:600;color:var(--tt-name);
+.tt-name{font-family:'Gentium Plus',serif;font-size:1rem;font-weight:700;color:var(--tt-name);
   margin:2px 0 2px;line-height:1.3;}
 .tt-skt{font-family:'Noto Serif Devanagari',serif;font-size:.85rem;
   color:var(--tt-skt);margin-bottom:6px;}
@@ -204,7 +204,7 @@ html.light .key-panel{
   letter-spacing:0.05em;flex-shrink:0;min-width:18px;
 }
 .key-name{
-  font-family:'EB Garamond',serif;font-style:italic;
+  font-family:'Gentium Plus',serif;font-style:italic;
   font-size:0.72rem;color:var(--leg-text);line-height:1.3;
 }
 
@@ -217,7 +217,7 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
 .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .attribution{
   width:100%;text-align:center;padding:12px 0 28px;
-  font-family:'EB Garamond',serif;font-style:italic;
+  font-family:'Gentium Plus',serif;font-style:italic;
   font-size:0.78rem;color:var(--attr-text);
   letter-spacing:0.12em;transition:color 0.4s;
 }
@@ -559,7 +559,7 @@ function buildChart(){
     const nmR=K.nmI+48,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
     let dn=r.name; if(dn.length>15)dn=dn.slice(0,14)+'…';
     const nmt=mk('text',{x:tx,y:ty,fill:light?'rgba(20,12,4,0.80)':cv('--name-text'),
-      'font-family':'EB Garamond,serif','font-size':'7.8',
+      'font-family':'Gentium Plus,serif','font-size':'8.2',
       'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${tx},${ty})`});
     nmt.textContent=dn; gLbl.appendChild(nmt);
 
@@ -603,14 +603,13 @@ function buildChart(){
     t.textContent=txt; SV.appendChild(t);
   });
 
-  // Swara ring labels — placed on the vertical 0° axis (top), centred in each ring band
-  // Draw on the straight line between raga 72 and raga 1 (the 0° / top divider)
+  // Swara ring labels — placed at 270° (left side of chart, between chakra 9 and 10 boundary)
+  // This avoids any collision with M1/M2 labels which sit on the vertical (0°/180°) axis
   [{r:(K.mI+K.mO)/2,lbl:'M'},{r:(K.rI+K.rO)/2,lbl:'R'},{r:(K.gI+K.gO)/2,lbl:'G'},
    {r:(K.dI+K.dO)/2,lbl:'D'},{r:(K.nI+K.nO)/2,lbl:'N'}].forEach(({r,lbl})=>{
-    // Place at exactly 0° (top of chart) — x=0, y=-r
-    const x=0, y=-r;
+    // 270° = left side: x=-r, y=0
+    const x=-r, y=0;
     const pillW=18, pillH=13;
-    // Background pill for legibility
     const pill=mk('rect',{
       x:-pillW/2, y:-pillH/2,
       width:pillW, height:pillH,
@@ -642,7 +641,7 @@ function buildChart(){
   const ctL=mk('text',{x:0,y:-7,fill:cv('--ctr-sp'),'font-family':'Cinzel,serif','font-size':'12',
     'font-weight':'700','text-anchor':'middle','dominant-baseline':'middle','letter-spacing':'3'});
   ctL.textContent='S · P'; SV.appendChild(ctL);
-  const ctS=mk('text',{x:0,y:10,fill:cv('--ctr-sub'),'font-family':'EB Garamond,serif','font-size':'7',
+  const ctS=mk('text',{x:0,y:10,fill:cv('--ctr-sub'),'font-family':'Gentium Plus,serif','font-size':'7',
     'font-style':'italic','text-anchor':'middle','dominant-baseline':'middle'});
   ctS.textContent='Shadja · Panchama'; SV.appendChild(ctS);
   const ctF=mk('text',{x:0,y:21,fill:cv('--ctr-fixed'),'font-family':'Cinzel,serif','font-size':'5.5',
