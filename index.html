@@ -222,11 +222,59 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   letter-spacing:0.12em;transition:color 0.4s;
 }
 
+/* ── SEARCH BAR ── */
+.search-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 20px 0;gap:6px;
+}
+.search-row{
+  display:flex;align-items:center;gap:8px;
+  width:min(95vw,420px);
+}
+.search-input{
+  flex:1;
+  font-family:'Gentium Plus',serif;font-size:0.9rem;
+  background:rgba(201,170,90,0.06);
+  border:1px solid var(--ring-bold);
+  border-radius:20px;
+  padding:7px 16px;
+  color:var(--header-title);
+  outline:none;
+  transition:border-color 0.2s, background 0.2s;
+  letter-spacing:0.04em;
+}
+.search-input::placeholder{ color:var(--badge-text); }
+.search-input:focus{
+  border-color:var(--header-title);
+  background:rgba(201,170,90,0.10);
+}
+.search-clear{
+  display:none;
+  font-family:'Cinzel',serif;font-size:0.6rem;
+  background:none;border:1px solid var(--ring-bold);
+  border-radius:20px;padding:5px 12px;
+  color:var(--badge-text);cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;
+  letter-spacing:0.1em;
+}
+.search-clear:hover{ color:var(--header-title);border-color:var(--header-title); }
+.search-clear.visible{ display:block; }
+.search-hint{
+  font-family:'Gentium Plus',serif;font-style:italic;
+  font-size:0.72rem;color:var(--badge-text);
+  letter-spacing:0.06em;text-align:center;
+  min-height:1.1em;
+  transition:color 0.2s;
+}
+.search-hint.match{ color:#52c490; }
+.search-hint.no-match{ color:#d45272; }
+
 /* ── PRINT STYLES ── */
 @media print {
   html { background:#fff !important; }
   body { background:#fff !important; }
   .toggle-wrap { display:none !important; }
+  .search-wrap  { display:none !important; }
   #tt { display:none !important; }
   header h1 { color:#5a3c08 !important; }
   header p, .pi-badge, .attribution { color:#7a5c20 !important; }
@@ -248,6 +296,16 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   <p>72 Melakartas · Carnatic Classical Music</p>
   <div class="pi-badge">π · v1.0 · Pi Day · 14 March 2026</div>
 </header>
+
+<div class="search-wrap">
+  <div class="search-row">
+    <input class="search-input" id="searchInput" type="text"
+      placeholder="Search raga, mela №, chakra or swaras…"
+      oninput="onSearch(this.value)" autocomplete="off" spellcheck="false"/>
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕ Clear</button>
+  </div>
+  <div class="search-hint" id="searchHint">Try "Bhairavi", "22", "VEDA", or "R2 G3"</div>
+</div>
 
 <div class="wrap"><svg id="svg" viewBox="-420 -420 840 840"></svg></div>
 <div id="tt"></div>
@@ -678,8 +736,146 @@ for(let c=1;c<=12;c++){
   footer.appendChild(d);
 }
 
+// ── SEARCH
+const searchInput  = document.getElementById('searchInput');
+const searchClear  = document.getElementById('searchClear');
+const searchHint   = document.getElementById('searchHint');
+
+// Store references to each segment's hit path and highlight overlay
+const segmentMap = []; // filled after buildChart runs — keyed by DATA index
+
+// We need to intercept buildChart to capture hit paths.
+// Instead we use a post-build highlight layer approach:
+// After buildChart, we add a transparent overlay per segment that search can colour.
+
+const highlightLayer = document.createElementNS(NS,'g');
+highlightLayer.setAttribute('id','highlightLayer');
+// appended to SV after each redraw — see patchHighlightLayer()
+
+function patchHighlightLayer(){
+  // Remove old highlight layer if present
+  const old = SV.querySelector('#highlightLayer');
+  if(old) SV.removeChild(old);
+  const hl = document.createElementNS(NS,'g');
+  hl.setAttribute('id','highlightLayer');
+  hl.setAttribute('pointer-events','none');
+  SV.appendChild(hl);
+  // Pre-create one highlight arc per raga
+  DATA.forEach((r,i)=>{
+    const aS=i*SEG+GAP/2, aE=(i+1)*SEG-GAP/2;
+    const p = mk('path',{
+      d: AP(K.mI, K.nmO, aS, aE),
+      fill:'transparent', stroke:'none',
+      'data-idx': i
+    });
+    hl.appendChild(p);
+  });
+}
+
+// Patch redraw to also rebuild highlight layer
+const _origRedraw = redraw;
+function redraw(){
+  _origRedraw();
+  patchHighlightLayer();
+  // Re-apply any active search
+  const q = searchInput ? searchInput.value.trim() : '';
+  if(q) applyHighlights(getMatches(q));
+}
+
+function getMatches(q){
+  if(!q) return null;
+  const raw = q.trim().toLowerCase();
+  const matches = new Set();
+
+  DATA.forEach((r,i)=>{
+    // 1. Mela number — exact
+    if(String(r.n) === raw) { matches.add(i); return; }
+
+    // 2. Raga name — partial, case-insensitive, strips diacritics for fuzzy
+    const name = r.name.toLowerCase();
+    const namePlain = name.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const qPlain = raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(name.includes(raw) || namePlain.includes(qPlain)) { matches.add(i); return; }
+
+    // 3. Chakra name
+    if(r.cn.toLowerCase().includes(raw)) { matches.add(i); return; }
+
+    // 4. Swara tokens — all tokens must match
+    const tokens = raw.split(/\s+/).filter(Boolean);
+    const swaras = [r.M, r.R, r.G, r.D, r.N, 'S', 'P'].map(s=>s.toLowerCase());
+    if(tokens.length > 0 && tokens.every(tok => swaras.some(sw => sw === tok))) {
+      matches.add(i); return;
+    }
+  });
+
+  return matches;
+}
+
+function applyHighlights(matches){
+  const hl = SV.querySelector('#highlightLayer');
+  if(!hl) return;
+  const paths = hl.querySelectorAll('path');
+  const hasMatches = matches && matches.size > 0;
+  const activeCol = getComputedStyle(document.documentElement)
+    .getPropertyValue('--header-title').trim();
+
+  paths.forEach((p,i)=>{
+    if(!matches){
+      // No search — all clear
+      p.setAttribute('fill','transparent');
+      p.setAttribute('stroke','none');
+    } else if(matches.has(i)){
+      // Match — golden glow
+      p.setAttribute('fill','rgba(201,170,90,0.18)');
+      p.setAttribute('stroke',activeCol);
+      p.setAttribute('stroke-width','1.5');
+      p.setAttribute('stroke-opacity','0.7');
+    } else {
+      // Non-match — dim out
+      p.setAttribute('fill','rgba(0,0,0,0.45)');
+      p.setAttribute('stroke','none');
+    }
+  });
+}
+
+function onSearch(val){
+  const q = val.trim();
+  searchClear.classList.toggle('visible', q.length > 0);
+
+  if(!q){
+    applyHighlights(null);
+    searchHint.textContent = 'Try "Bhairavi", "22", "VEDA", or "R2 G3"';
+    searchHint.className = 'search-hint';
+    return;
+  }
+
+  const matches = getMatches(q);
+  applyHighlights(matches);
+
+  if(matches.size === 0){
+    searchHint.textContent = 'No ragas found — try a name, number, chakra, or swara';
+    searchHint.className = 'search-hint no-match';
+  } else if(matches.size === 1){
+    const r = DATA[[...matches][0]];
+    searchHint.textContent = `✦ Mela ${r.n} · ${r.name} · Chakra ${r.ck} ${r.cn}`;
+    searchHint.className = 'search-hint match';
+  } else {
+    searchHint.textContent = `✦ ${matches.size} ragas match`;
+    searchHint.className = 'search-hint match';
+  }
+}
+
+function clearSearch(){
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  applyHighlights(null);
+  searchHint.textContent = 'Try "Bhairavi", "22", "VEDA", or "R2 G3"';
+  searchHint.className = 'search-hint';
+}
+
 // ── Initial draw
 buildChart();
+patchHighlightLayer();
 updateKeyColors();
 </script>
 </body>
