@@ -177,6 +177,41 @@ svg{width:100%;height:100%;overflow:visible;}
   background:rgba(201,170,90,.07);border:1px solid rgba(201,170,90,.18); }
 
 
+/* ── SWARA KEY ── */
+.key-panel{
+  width:min(95vw,840px);margin:10px auto 0;
+  display:grid;
+  grid-template-columns:auto repeat(7,1fr);
+  gap:6px 12px;
+  padding:12px 18px;
+  border:1px solid var(--ring-soft);
+  border-radius:10px;
+  background:rgba(201,170,90,0.03);
+  transition:border-color 0.4s,background 0.4s;
+  align-items:start;
+}
+html.light .key-panel{ background:rgba(107,78,16,0.04); }
+.key-title{
+  width:100%;
+  font-family:'Cinzel',serif;font-size:0.6rem;font-weight:600;
+  letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--header-title);opacity:0.65;margin-bottom:2px;
+}
+.key-group{ display:flex;flex-direction:column;gap:3px;min-width:100px; }
+.key-group-label{
+  font-family:'Cinzel',serif;font-size:0.55rem;font-weight:700;
+  letter-spacing:0.1em;color:var(--header-title);opacity:0.5;margin-bottom:1px;
+}
+.key-item{ display:flex;align-items:baseline;gap:5px; }
+.key-code{
+  font-family:'Cinzel',serif;font-size:0.63rem;font-weight:700;
+  letter-spacing:0.04em;flex-shrink:0;min-width:20px;
+}
+.key-name{
+  font-family:'Gentium Plus',serif;font-style:italic;
+  font-size:0.7rem;color:var(--leg-text);line-height:1.35;
+}
+
 /* ── FOOTER + ATTRIBUTION ── */
 footer{display:flex;flex-wrap:wrap;justify-content:center;
   gap:5px 18px;padding:12px 20px 6px;max-width:820px;}
@@ -288,7 +323,51 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
 <div class="wrap"><svg id="svg" viewBox="-420 -420 840 840"></svg></div>
 <div id="tt"></div>
 
+<div class="key-panel" id="keyPanel">
+  <div class="key-title">Swara Key · opacity encodes variant</div>
+  <div class="key-group">
+    <div class="key-group-label">Madhyama</div>
+    <div class="key-item"><span class="key-code" id="kM1" style="color:#d4913a">M1</span><span class="key-name">Śuddha Madhyamam</span></div>
+    <div class="key-item"><span class="key-code" id="kM2" style="color:#3a8ed4">M2</span><span class="key-name">Prati Madhyamam</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Ṛṣabha</div>
+    <div class="key-item"><span class="key-code kv1">R1</span><span class="key-name">Śuddha Ṛṣabham</span></div>
+    <div class="key-item"><span class="key-code kv2">R2</span><span class="key-name">Catuśruti Ṛṣabham</span></div>
+    <div class="key-item"><span class="key-code kv3">R3</span><span class="key-name">Ṣaṭśruti Ṛṣabham</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Gāndhāra</div>
+    <div class="key-item"><span class="key-code kv1">G1</span><span class="key-name">Śuddha Gāndhāram</span></div>
+    <div class="key-item"><span class="key-code kv2">G2</span><span class="key-name">Sādhāraṇa Gāndhāram</span></div>
+    <div class="key-item"><span class="key-code kv3">G3</span><span class="key-name">Antara Gāndhāram</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Dhaivata</div>
+    <div class="key-item"><span class="key-code kv1">D1</span><span class="key-name">Śuddha Dhaivatam</span></div>
+    <div class="key-item"><span class="key-code kv2">D2</span><span class="key-name">Catuśruti Dhaivatam</span></div>
+    <div class="key-item"><span class="key-code kv3">D3</span><span class="key-name">Ṣaṭśruti Dhaivatam</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Niṣāda</div>
+    <div class="key-item"><span class="key-code kv1">N1</span><span class="key-name">Śuddha Niṣādam</span></div>
+    <div class="key-item"><span class="key-code kv2">N2</span><span class="key-name">Kaiśiki Niṣādam</span></div>
+    <div class="key-item"><span class="key-code kv3">N3</span><span class="key-name">Kākali Niṣādam</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Fixed</div>
+    <div class="key-item"><span class="key-code" style="opacity:0.55">S</span><span class="key-name">Ṣaḍjam</span></div>
+    <div class="key-item"><span class="key-code" style="opacity:0.55">P</span><span class="key-name">Pañcamam</span></div>
+  </div>
+  <div class="key-group">
+    <div class="key-group-label">Opacity</div>
+    <div class="key-item"><span class="key-code kv1">●</span><span class="key-name">Variant 1 · dim</span></div>
+    <div class="key-item"><span class="key-code kv2">●</span><span class="key-name">Variant 2 · mid</span></div>
+    <div class="key-item"><span class="key-code kv3">●</span><span class="key-name">Variant 3 · bright</span></div>
+  </div>
+</div>
 <footer id="footer"></footer>
+
 <div class="attribution">Visualization by Lakshmi Ganesan &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Built with Claude</div>
 
 <script>
@@ -303,7 +382,14 @@ function toggleMode() {
   redraw();
 }
 
-function updateKeyColors(){ /* key panel removed */ }
+function updateKeyColors(){
+  const base = isLight ? '80,60,20' : '201,170,90';
+  document.querySelectorAll('.kv1').forEach(e=>e.style.color=`rgba(${base},0.42)`);
+  document.querySelectorAll('.kv2').forEach(e=>e.style.color=`rgba(${base},0.70)`);
+  document.querySelectorAll('.kv3').forEach(e=>e.style.color=`rgba(${base},0.95)`);
+  document.getElementById('kM1').style.color = isLight ? '#a06010' : '#d4913a';
+  document.getElementById('kM2').style.color = isLight ? '#1060a0' : '#3a8ed4';
+}
 
 // ── DATA
 const DATA = [
@@ -769,6 +855,7 @@ function clearSearch(){
 // ── Initial draw
 buildChart();
 patchHighlightLayer();
+updateKeyColors();
 updateKeyColors();
 </script>
 </body>
