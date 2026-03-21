@@ -192,17 +192,27 @@ svg{width:100%;height:100%;overflow:visible;}
 }
 html.light .key-panel{ background:rgba(107,78,16,0.04); }
 .key-title{
-  width:100%;
+  grid-column:1/-1;
   font-family:'Cinzel',serif;font-size:0.6rem;font-weight:600;
   letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--header-title);opacity:0.65;margin-bottom:2px;
+  color:var(--header-title);opacity:0.65;
+  margin-bottom:4px;padding-bottom:5px;
+  border-bottom:1px solid var(--ring-soft);
 }
 .key-group{ display:flex;flex-direction:column;gap:3px;min-width:100px; }
 .key-group-label{
   font-family:'Cinzel',serif;font-size:0.55rem;font-weight:700;
   letter-spacing:0.1em;color:var(--header-title);opacity:0.5;margin-bottom:1px;
 }
-.key-item{ display:flex;align-items:baseline;gap:5px; }
+.key-item{
+  display:flex;align-items:baseline;gap:5px;
+  cursor:pointer;border-radius:5px;padding:1px 4px;margin:-1px -4px;
+  transition:background 0.15s;
+}
+.key-item:hover{ background:rgba(201,170,90,0.08); }
+.key-item.active{ background:rgba(201,170,90,0.18);border-radius:5px; }
+html.light .key-item:hover{ background:rgba(107,78,16,0.08); }
+html.light .key-item.active{ background:rgba(107,78,16,0.14); }
 .key-code{
   font-family:'Cinzel',serif;font-size:0.63rem;font-weight:700;
   letter-spacing:0.04em;flex-shrink:0;min-width:20px;
@@ -217,7 +227,13 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   gap:5px 18px;padding:12px 20px 6px;max-width:820px;}
 .leg{display:flex;align-items:center;gap:5px;font-family:'Cinzel',serif;
   font-size:.59rem;color:var(--leg-text);letter-spacing:.07em;
-  transition:color 0.4s;}
+  transition:color 0.4s, background 0.15s;
+  border-radius:5px;padding:2px 6px;margin:-2px -6px;
+}
+.leg:hover{ background:rgba(201,170,90,0.08); }
+.leg.active{ background:rgba(201,170,90,0.18); }
+html.light .leg:hover{ background:rgba(107,78,16,0.08); }
+html.light .leg.active{ background:rgba(107,78,16,0.14); }
 .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .attribution{
   width:100%;text-align:center;padding:12px 0 28px;
@@ -292,6 +308,11 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   header h1 { color:#5a3c08 !important; }
   header p, .pi-badge, .attribution { color:#7a5c20 !important; }
   .leg { color:#333 !important; }
+  /* Force all SVG text to dark for printing */
+  svg text { fill:#111111 !important; }
+  /* Keep chakra labels and M1/M2 in their colours */
+  svg text[fill^="#d49"] { fill:#b06010 !important; }
+  svg text[fill^="#3a8"] { fill:#1050a0 !important; }
 }
 </style>
 </head>
@@ -327,32 +348,32 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   <div class="key-title">Swara Key · opacity encodes variant</div>
   <div class="key-group">
     <div class="key-group-label">Madhyama</div>
-    <div class="key-item"><span class="key-code" id="kM1" style="color:#d4913a">M1</span><span class="key-name">Śuddha Madhyamam</span></div>
-    <div class="key-item"><span class="key-code" id="kM2" style="color:#3a8ed4">M2</span><span class="key-name">Prati Madhyamam</span></div>
+    <div class="key-item" data-filter="M1" onclick="filterByKey(this,'M1')"><span class="key-code" id="kM1" style="color:#d4913a">M1</span><span class="key-name">Śuddha Madhyamam</span></div>
+    <div class="key-item" data-filter="M2" onclick="filterByKey(this,'M2')"><span class="key-code" id="kM2" style="color:#3a8ed4">M2</span><span class="key-name">Prati Madhyamam</span></div>
   </div>
   <div class="key-group">
     <div class="key-group-label">Ṛṣabha</div>
-    <div class="key-item"><span class="key-code kv1">R1</span><span class="key-name">Śuddha Ṛṣabham</span></div>
-    <div class="key-item"><span class="key-code kv2">R2</span><span class="key-name">Catuśruti Ṛṣabham</span></div>
-    <div class="key-item"><span class="key-code kv3">R3</span><span class="key-name">Ṣaṭśruti Ṛṣabham</span></div>
+    <div class="key-item" data-filter="R1" onclick="filterByKey(this,'R1')"><span class="key-code kv1">R1</span><span class="key-name">Śuddha Ṛṣabham</span></div>
+    <div class="key-item" data-filter="R2" onclick="filterByKey(this,'R2')"><span class="key-code kv2">R2</span><span class="key-name">Catuśruti Ṛṣabham</span></div>
+    <div class="key-item" data-filter="R3" onclick="filterByKey(this,'R3')"><span class="key-code kv3">R3</span><span class="key-name">Ṣaṭśruti Ṛṣabham</span></div>
   </div>
   <div class="key-group">
     <div class="key-group-label">Gāndhāra</div>
-    <div class="key-item"><span class="key-code kv1">G1</span><span class="key-name">Śuddha Gāndhāram</span></div>
-    <div class="key-item"><span class="key-code kv2">G2</span><span class="key-name">Sādhāraṇa Gāndhāram</span></div>
-    <div class="key-item"><span class="key-code kv3">G3</span><span class="key-name">Antara Gāndhāram</span></div>
+    <div class="key-item" data-filter="G1" onclick="filterByKey(this,'G1')"><span class="key-code kv1">G1</span><span class="key-name">Śuddha Gāndhāram</span></div>
+    <div class="key-item" data-filter="G2" onclick="filterByKey(this,'G2')"><span class="key-code kv2">G2</span><span class="key-name">Sādhāraṇa Gāndhāram</span></div>
+    <div class="key-item" data-filter="G3" onclick="filterByKey(this,'G3')"><span class="key-code kv3">G3</span><span class="key-name">Antara Gāndhāram</span></div>
   </div>
   <div class="key-group">
     <div class="key-group-label">Dhaivata</div>
-    <div class="key-item"><span class="key-code kv1">D1</span><span class="key-name">Śuddha Dhaivatam</span></div>
-    <div class="key-item"><span class="key-code kv2">D2</span><span class="key-name">Catuśruti Dhaivatam</span></div>
-    <div class="key-item"><span class="key-code kv3">D3</span><span class="key-name">Ṣaṭśruti Dhaivatam</span></div>
+    <div class="key-item" data-filter="D1" onclick="filterByKey(this,'D1')"><span class="key-code kv1">D1</span><span class="key-name">Śuddha Dhaivatam</span></div>
+    <div class="key-item" data-filter="D2" onclick="filterByKey(this,'D2')"><span class="key-code kv2">D2</span><span class="key-name">Catuśruti Dhaivatam</span></div>
+    <div class="key-item" data-filter="D3" onclick="filterByKey(this,'D3')"><span class="key-code kv3">D3</span><span class="key-name">Ṣaṭśruti Dhaivatam</span></div>
   </div>
   <div class="key-group">
     <div class="key-group-label">Niṣāda</div>
-    <div class="key-item"><span class="key-code kv1">N1</span><span class="key-name">Śuddha Niṣādam</span></div>
-    <div class="key-item"><span class="key-code kv2">N2</span><span class="key-name">Kaiśiki Niṣādam</span></div>
-    <div class="key-item"><span class="key-code kv3">N3</span><span class="key-name">Kākali Niṣādam</span></div>
+    <div class="key-item" data-filter="N1" onclick="filterByKey(this,'N1')"><span class="key-code kv1">N1</span><span class="key-name">Śuddha Niṣādam</span></div>
+    <div class="key-item" data-filter="N2" onclick="filterByKey(this,'N2')"><span class="key-code kv2">N2</span><span class="key-name">Kaiśiki Niṣādam</span></div>
+    <div class="key-item" data-filter="N3" onclick="filterByKey(this,'N3')"><span class="key-code kv3">N3</span><span class="key-name">Kākali Niṣādam</span></div>
   </div>
   <div class="key-group">
     <div class="key-group-label">Fixed</div>
@@ -361,9 +382,9 @@ footer{display:flex;flex-wrap:wrap;justify-content:center;
   </div>
   <div class="key-group">
     <div class="key-group-label">Opacity</div>
-    <div class="key-item"><span class="key-code kv1">●</span><span class="key-name">Variant 1 · dim</span></div>
-    <div class="key-item"><span class="key-code kv2">●</span><span class="key-name">Variant 2 · mid</span></div>
-    <div class="key-item"><span class="key-code kv3">●</span><span class="key-name">Variant 3 · bright</span></div>
+    <div class="key-item" data-filter="v1" onclick="filterByKey(this,'v1')"><span class="key-code kv1">●</span><span class="key-name">Variant 1 · dim</span></div>
+    <div class="key-item" data-filter="v2" onclick="filterByKey(this,'v2')"><span class="key-code kv2">●</span><span class="key-name">Variant 2 · mid</span></div>
+    <div class="key-item" data-filter="v3" onclick="filterByKey(this,'v3')"><span class="key-code kv3">●</span><span class="key-name">Variant 3 · bright</span></div>
   </div>
 </div>
 <footer id="footer"></footer>
@@ -489,6 +510,10 @@ function cv(name){ return getComputedStyle(document.documentElement).getProperty
 function redraw(){
   while(SV.firstChild) SV.removeChild(SV.firstChild);
   buildChart();
+  patchHighlightLayer();
+  // Re-apply any active search or filter
+  const q = searchInput ? searchInput.value.trim() : '';
+  if(q) applyHighlights(getMatches(q));
 }
 
 function buildChart(){
@@ -539,20 +564,24 @@ function buildChart(){
     gD.appendChild(seg(K.dI,K.dO,col,VO[r.D.slice(1)]));
     gN.appendChild(seg(K.nI,K.nO,col,VO[r.N.slice(1)]));
     gNm.appendChild(mk('path',{d:AP(K.nmI,K.nmO,aS,aE),fill:col,
-      'fill-opacity':light?0.07:0.10,stroke:col,'stroke-width':0.35,'stroke-opacity':0.3}));
+      'fill-opacity':light?0.22:0.10,stroke:col,'stroke-width':0.35,'stroke-opacity':0.3}));
 
     // Number
     const nR=K.nmI+12,[nx,ny]=[nR*Math.cos(mRad),nR*Math.sin(mRad)];
-    const nt=mk('text',{x:nx,y:ny,fill:light?col+'dd':col,
+    const nt=mk('text',{x:nx,y:ny,fill:col,
       'font-family':'Cinzel,serif','font-size':'6.5','font-weight':'700',
+      'fill-opacity':'1',
       'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${nx},${ny})`});
     nt.textContent=r.n; gLbl.appendChild(nt);
 
     // Raga name (IAST only — no Devanagari on chart)
     const nmR=K.nmI+48,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
     let dn=r.name; if(dn.length>15)dn=dn.slice(0,14)+'…';
-    const nmt=mk('text',{x:tx,y:ty,fill:light?'rgba(20,12,4,0.80)':cv('--name-text'),
-      'font-family':'Gentium Plus,serif','font-size':'8.2',
+    const nmt=mk('text',{x:tx,y:ty,
+      fill:light?'#000000':cv('--name-text'),
+      'font-family':'Gentium Plus,serif',
+      'font-size': light ? '8.5' : '8.2',
+      'font-weight': light ? '700' : '400',
       'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${tx},${ty})`});
     nmt.textContent=dn; gLbl.appendChild(nmt);
 
@@ -585,11 +614,15 @@ function buildChart(){
     const midA=(c+0.5)*30, ar=(midA-90)*Math.PI/180;
     const flip=midA>180,rot=flip?midA-90+180:midA-90;
     const[cx,cy]=[K.ckLbl*Math.cos(ar),K.ckLbl*Math.sin(ar)];
+    const cg=mk('g',{cursor:'pointer'});
+    cg.addEventListener('click',()=>filterByChakra(c+1));
+    cg.addEventListener('mouseenter',()=>{ ct.setAttribute('font-size','9'); });
+    cg.addEventListener('mouseleave',()=>{ ct.setAttribute('font-size','7.8'); });
     const ct=mk('text',{x:cx,y:cy,fill:CKC[c+1],
       'font-family':'Cinzel,serif','font-size':'7.8','font-weight':'600',
       'letter-spacing':'1.2','text-anchor':'middle','dominant-baseline':'middle',
       transform:`rotate(${rot},${cx},${cy})`});
-    ct.textContent=CKN[c+1]; SV.appendChild(ct);
+    ct.textContent=CKN[c+1]; cg.appendChild(ct); SV.appendChild(cg);
   }
 
   // M1/M2 split
@@ -710,8 +743,12 @@ document.addEventListener('click',e=>{
 // ── Legend
 const footer=document.getElementById('footer');
 for(let c=1;c<=12;c++){
-  const d=document.createElement('div');d.className='leg';
+  const d=document.createElement('div');
+  d.className='leg';
+  d.style.cursor='pointer';
+  d.dataset.chakra=c;
   d.innerHTML=`<div class="leg-dot" style="background:${CKC[c]}"></div>${c}. ${CKN[c]}`;
+  d.addEventListener('click',()=>filterByChakra(c));
   footer.appendChild(d);
 }
 
@@ -752,15 +789,6 @@ function patchHighlightLayer(){
 }
 
 // Patch redraw to also rebuild highlight layer
-const _origRedraw = redraw;
-function redraw(){
-  _origRedraw();
-  patchHighlightLayer();
-  // Re-apply any active search
-  const q = searchInput ? searchInput.value.trim() : '';
-  if(q) applyHighlights(getMatches(q));
-}
-
 function getMatches(q){
   if(!q) return null;
   const raw = q.trim().toLowerCase();
@@ -820,6 +848,11 @@ function applyHighlights(matches){
 function onSearch(val){
   const q = val.trim();
   searchClear.classList.toggle('visible', q.length > 0);
+  // Clear key filter when user types
+  if(q){
+    activeKeyFilter=null; document.querySelectorAll('.key-item').forEach(k=>k.classList.remove('active'));
+    activeChakraFilter=null; document.querySelectorAll('.leg').forEach(l=>l.classList.remove('active'));
+  }
 
   if(!q){
     applyHighlights(null);
@@ -844,12 +877,93 @@ function onSearch(val){
   }
 }
 
-function clearSearch(){
+// ── KEY FILTER
+let activeKeyFilter = null;
+
+function filterByKey(el, token){
+  // Toggle off if clicking active filter
+  if(activeKeyFilter === token){
+    clearKeyFilter();
+    return;
+  }
+  // Clear search input
   searchInput.value = '';
   searchClear.classList.remove('visible');
+  activeKeyFilter = token;
+
+  // Mark active item, clear others
+  document.querySelectorAll('.key-item').forEach(k => k.classList.remove('active'));
+  el.classList.add('active');
+
+  // Build match set
+  const matches = new Set();
+  DATA.forEach((r,i)=>{
+    if(token==='M1' && r.M==='M1') matches.add(i);
+    else if(token==='M2' && r.M==='M2') matches.add(i);
+    else if(token==='v1' && (r.R==='R1'||r.G==='G1'||r.D==='D1'||r.N==='N1')) matches.add(i);
+    else if(token==='v2' && (r.R==='R2'||r.G==='G2'||r.D==='D2'||r.N==='N2')) matches.add(i);
+    else if(token==='v3' && (r.R==='R3'||r.G==='G3'||r.D==='D3'||r.N==='N3')) matches.add(i);
+    else if([r.R,r.G,r.D,r.N].includes(token)) matches.add(i);
+  });
+
+  applyHighlights(matches);
+  searchHint.textContent = `✦ ${matches.size} ragas · ${token}`;
+  searchHint.className = 'search-hint match';
+}
+
+function clearKeyFilter(){
+  activeKeyFilter = null;
+  document.querySelectorAll('.key-item').forEach(k => k.classList.remove('active'));
   applyHighlights(null);
   searchHint.textContent = 'Try "Bhairavi", "22", "VEDA", or "R2 G3"';
   searchHint.className = 'search-hint';
+}
+
+// ── CHAKRA FILTER
+let activeChakraFilter = null;
+
+function filterByChakra(ck){
+  // Toggle off if same chakra clicked again
+  if(activeChakraFilter === ck){
+    clearChakraFilter();
+    return;
+  }
+  // Clear search + key filters
+  searchInput.value='';
+  searchClear.classList.remove('visible');
+  activeKeyFilter=null;
+  document.querySelectorAll('.key-item').forEach(k=>k.classList.remove('active'));
+
+  activeChakraFilter = ck;
+
+  // Mark active legend item
+  document.querySelectorAll('.leg').forEach(l=>{
+    l.classList.toggle('active', parseInt(l.dataset.chakra)===ck);
+  });
+
+  // Build match set — all 6 ragas in this chakra
+  const matches = new Set();
+  DATA.forEach((r,i)=>{ if(r.ck===ck) matches.add(i); });
+
+  applyHighlights(matches);
+  const col = CKC[ck];
+  searchHint.innerHTML = `<span style="color:${col}">✦ Chakra ${ck} · ${CKN[ck]} · ${matches.size} ragas</span>`;
+  searchHint.className = 'search-hint match';
+}
+
+function clearChakraFilter(){
+  activeChakraFilter = null;
+  document.querySelectorAll('.leg').forEach(l=>l.classList.remove('active'));
+  applyHighlights(null);
+  searchHint.textContent = 'Try "Bhairavi", "22", "VEDA", or "R2 G3"';
+  searchHint.className = 'search-hint';
+}
+
+function clearSearch(){
+  searchInput.value = '';
+  searchClear.classList.remove('visible');
+  clearKeyFilter();
+  clearChakraFilter();
 }
 
 // ── Initial draw
@@ -857,6 +971,17 @@ buildChart();
 patchHighlightLayer();
 updateKeyColors();
 updateKeyColors();
+
+// ── Auto switch to light mode for print, restore after
+window.addEventListener('beforeprint', () => {
+  if(!isLight){ isLight=true; document.documentElement.classList.add('light'); redraw(); updateKeyColors(); }
+});
+window.addEventListener('afterprint', () => {
+  isLight=false; document.documentElement.classList.remove('light');
+  document.getElementById('toggleIcon').textContent='☀️';
+  document.getElementById('toggleLabel').textContent='Light';
+  redraw(); updateKeyColors();
+});
 </script>
 </body>
 </html>
