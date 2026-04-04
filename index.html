@@ -290,8 +290,12 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 .search-hint.no-match{ color:#d45272; }
 
 
-.tt-yt{
-  display:block;margin-top:8px;padding-top:8px;
+.tt-alt{
+  font-family:'Gentium Plus',serif;font-style:italic;
+  font-size:0.78rem;color:var(--tt-skt);opacity:0.75;
+  margin-bottom:2px;
+}
+.tt-yt{   display:block;margin-top:8px;padding-top:8px;
   border-top:1px solid var(--ring-soft);
   font-family:'Gentium Plus',serif;font-size:0.78rem;
   color:var(--tt-aro);text-decoration:none;
@@ -389,7 +393,7 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 </div>
 <footer id="footer"></footer>
 
-<div class="attribution">Visualization by Lakshmi Ganesan &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Built with Claude</div>
+<div class="attribution">Visualization by Lakshmi Ganesan &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Built with Claude &nbsp;·&nbsp; Audio recordings © Vidya Subramanian · used with permission</div>
 
 <script>
 // ── THEME TOGGLE
@@ -433,7 +437,7 @@ const DATA = [
   {n:17, name:"Sūryakāntam",          skt:"सूर्यकान्तम्",      ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R1 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R1 S", yt:{id:"FjccEkJOAR0",start:173,ts:"02:53"}},
   {n:18, name:"Hāṭakāmbari",          skt:"हाटकाम्बरि",        ck:3,  cn:"AGNI",   R:"R1",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R1 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R1 S", yt:{id:"FjccEkJOAR0",start:211,ts:"03:31"}},
   {n:19, name:"Jhaṅkāradhvani",       skt:"झङ्कारध्वनि",       ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N1", aro:"S R2 G2 M1 P D1 N1 S", ava:"S N1 D1 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:0,ts:"00:00"}},
-  {n:20, name:"Naṭabhairavi",         skt:"नटभैरवि",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R2 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:54,ts:"00:54"}},
+  {n:20, name:"Naṭabhairavi",         alt:"Nārīrītigowla", skt:"नटभैरवि / नारीरीतिगौल",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N2", aro:"S R2 G2 M1 P D1 N2 S", ava:"S N2 D1 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:54,ts:"00:54"}},
   {n:21, name:"Kīravāṇi",             skt:"कीरवाणि",           ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D1",N:"N3", aro:"S R2 G2 M1 P D1 N3 S", ava:"S N3 D1 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:89,ts:"01:29"}},
   {n:22, name:"Kharaharapriya",       skt:"खरहरप्रिय",         ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N2", aro:"S R2 G2 M1 P D2 N2 S", ava:"S N2 D2 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:127,ts:"02:07"}},
   {n:23, name:"Gaurīmanōhari",        skt:"गौरीमनोहरि",        ck:4,  cn:"VEDA",   R:"R2",G:"G2",M:"M1",D:"D2",N:"N3", aro:"S R2 G2 M1 P D2 N3 S", ava:"S N3 D2 P M1 G2 R2 S", yt:{id:"y5Ef-w_FrSw",start:161,ts:"02:41"}},
@@ -445,8 +449,8 @@ const DATA = [
   {n:29, name:"Dhīraśaṅkarābharaṇam", skt:"धीरशङ्कराभरणम्",    ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R2 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R2 S", yt:{id:"qLdHUH2S738",start:170,ts:"02:50"}},
   {n:30, name:"Nāgānandini",          skt:"नागानन्दिनि",        ck:5,  cn:"BANA",   R:"R2",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R2 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R2 S", yt:{id:"qLdHUH2S738",start:214,ts:"03:34"}},
   {n:31, name:"Yāgapriya",            skt:"यागप्रिय",           ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N1", aro:"S R3 G3 M1 P D1 N1 S", ava:"S N1 D1 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:0,ts:"00:00"}},
-  {n:32, name:"Rāgacūḍāmaṇi",         skt:"रागचूडामणि",        ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R3 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:59,ts:"00:59"}},
-  {n:33, name:"Gaṅgātarangiṇi",       skt:"गङ्गातरङ्गिणि",     ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R3 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:96,ts:"01:36"}},
+  {n:32, name:"Rāgacūḍāmaṇi",     alt:"Rāgavardhini",         skt:"रागचूडामणि / रागावर्धिनी",        ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N2", aro:"S R3 G3 M1 P D1 N2 S", ava:"S N2 D1 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:59,ts:"00:59"}},
+  {n:33, name:"Gaṅgātarangiṇi",   alt:"Gāngēyabhūṣaṇi",       skt:"गङ्गातरङ्गिणि / गांगेयभूषणि",     ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D1",N:"N3", aro:"S R3 G3 M1 P D1 N3 S", ava:"S N3 D1 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:96,ts:"01:36"}},
   {n:34, name:"Bhāgavatapriya",       skt:"भागवतप्रिय",         ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N2", aro:"S R3 G3 M1 P D2 N2 S", ava:"S N2 D2 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:134,ts:"02:14"}},
   {n:35, name:"Śūlini",               skt:"शूलिनि",             ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D2",N:"N3", aro:"S R3 G3 M1 P D2 N3 S", ava:"S N3 D2 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:169,ts:"02:49"}},
   {n:36, name:"Calanāṭa",             skt:"चलनाट",             ck:6,  cn:"RUTU",   R:"R3",G:"G3",M:"M1",D:"D3",N:"N3", aro:"S R3 G3 M1 P D3 N3 S", ava:"S N3 D3 P M1 G3 R3 S", yt:{id:"Gm1u3_HYLNc",start:206,ts:"03:26"}},
@@ -695,13 +699,14 @@ function showTT(e,r){
   const col=CKC[r.ck];
   const audioHTML = r.yt
     ? `<a class="tt-yt" href="https://www.youtube.com/watch?v=${r.yt.id}&t=${r.yt.start}s" target="_blank" rel="noopener noreferrer">
-        <span class="tt-yt-icon">▶</span>Listen on YouTube · ${r.yt.ts}
+        <span class="tt-yt-icon">▶</span>Play on YouTube
        </a>`
     : '';
   ttEl.innerHTML=`
     <button class="tt-close" onclick="hideTT()">✕</button>
     <div class="tt-n">MELA № ${r.n}</div>
     <div class="tt-name">${r.name}</div>
+    ${r.alt ? `<div class="tt-alt">also: ${r.alt}</div>` : ''}
     <div class="tt-skt">${r.skt}</div>
     <div class="tt-sw">S · ${r.R} · ${r.G} · ${r.M} · P · ${r.D} · ${r.N} · S</div>
     <div class="tt-aro"><span>ĀRO</span>${r.aro}</div>
