@@ -305,47 +305,47 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 }
 .tt-yt:hover{ color:var(--header-title); }
 
-/* ── YOUTUBE PLAYER MODAL ── */
+/* ── YOUTUBE PLAYER MODAL — plain native embed in a simple lightbox ── */
 .yt-modal-overlay{
   position:fixed;inset:0;z-index:2000;
   background:rgba(0,0,0,0.84);
   backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
-  display:none;align-items:center;justify-content:center;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;
   padding:24px;
 }
 .yt-modal-overlay.on{ display:flex; }
 .yt-modal{
+  position:relative;
   width:min(900px,96vw);
-  background:var(--tt-bg);
-  border:1px solid var(--tt-border);
   border-radius:12px;
-  box-shadow:0 24px 70px rgba(0,0,0,0.55);
   overflow:hidden;
+  background:var(--tt-bg);
+  box-shadow:0 24px 70px rgba(0,0,0,0.55);
   animation:ytPop 0.18s ease;
 }
 @keyframes ytPop{ from{transform:scale(0.96);opacity:0;} to{transform:scale(1);opacity:1;} }
-.yt-modal-head{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:14px 18px 12px;
-  border-bottom:1px solid var(--ring-soft);
-}
-.yt-modal-n{ font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.15em;color:var(--tt-n); }
-.yt-modal-name{ font-family:'Gentium Plus',serif;font-size:1.05rem;font-weight:700;
-  color:var(--tt-name);margin-top:2px;line-height:1.25; }
 .yt-modal-close{
-  flex-shrink:0;
-  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;
-  color:var(--badge-text);background:none;
-  border:1px solid var(--ring-soft);border-radius:20px;
-  padding:5px 13px;cursor:pointer;transition:all 0.2s;
+  position:absolute;top:-15px;right:-15px;z-index:5;
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:0.78rem;
+  background:var(--tt-bg);color:var(--badge-text);
+  border:1px solid var(--tt-border);
+  cursor:pointer;transition:all 0.2s;
+  box-shadow:0 4px 14px rgba(0,0,0,0.45);
 }
 .yt-modal-close:hover{ color:var(--header-title);border-color:var(--header-title); }
 .yt-modal-frame{ position:relative;width:100%;aspect-ratio:16/9;background:#000; }
 .yt-modal-frame iframe{ position:absolute;inset:0;width:100%;height:100%;border:0; }
+.yt-modal-info{
+  padding:14px 20px 18px;
+  border-top:1px solid var(--ring-soft);
+}
 .yt-modal-fallback{
-  text-align:center;padding:9px 0 12px;
-  font-family:'Gentium Plus',serif;font-style:italic;font-size:0.72rem;
-  color:var(--badge-text);
+  text-align:center;
+  font-family:'Gentium Plus',serif;font-style:italic;font-size:0.74rem;
+  color:rgba(240,232,208,0.55);
 }
 .yt-modal-fallback a{ color:var(--header-title);text-decoration:none;font-style:normal; }
 .yt-modal-fallback a:hover{ text-decoration:underline; }
@@ -398,22 +398,17 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 
 <div class="yt-modal-overlay" id="ytOverlay" onclick="if(event.target===this) closeYTModal();">
   <div class="yt-modal" id="ytModal">
-    <div class="yt-modal-head">
-      <div>
-        <div class="yt-modal-n" id="ytModalN"></div>
-        <div class="yt-modal-name" id="ytModalName"></div>
-      </div>
-      <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕ Close</button>
-    </div>
+    <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕</button>
     <div class="yt-modal-frame">
       <iframe id="ytFrame" src="" title="YouTube player"
         referrerpolicy="strict-origin-when-cross-origin"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen></iframe>
     </div>
-    <div class="yt-modal-fallback">
-      Trouble playing? <a id="ytFallbackLink" href="#" target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a>
-    </div>
+    <div class="yt-modal-info" id="ytInfo"></div>
+  </div>
+  <div class="yt-modal-fallback">
+    Trouble playing? <a id="ytFallbackLink" href="#" target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a>
   </div>
 </div>
 
@@ -768,7 +763,7 @@ function showTT(e,r){
   const col=CKC[r.ck];
   const audioHTML = r.yt
     ? `<button class="tt-yt" onclick="openYTModal(${r.n})">
-        <span class="tt-yt-icon">▶</span>Play on YouTube
+        <span class="tt-yt-icon">▶</span>Click to Listen
        </button>`
     : '';
   ttEl.innerHTML=`
@@ -807,19 +802,26 @@ function hideTT(){
 }
 
 // ── YOUTUBE MODAL — focused, distraction-free playback inside the explorer
-const ytOverlay     = document.getElementById('ytOverlay');
-const ytFrame       = document.getElementById('ytFrame');
-const ytModalN      = document.getElementById('ytModalN');
-const ytModalName   = document.getElementById('ytModalName');
-const ytFallbackLink= document.getElementById('ytFallbackLink');
+const ytOverlay      = document.getElementById('ytOverlay');
+const ytFrame        = document.getElementById('ytFrame');
+const ytInfo         = document.getElementById('ytInfo');
+const ytFallbackLink = document.getElementById('ytFallbackLink');
 
 function openYTModal(melaNum){
   const r = DATA[melaNum-1];
   if(!r || !r.yt) return;
   hideTT();
-  ytModalN.textContent = `MELA № ${r.n} · CHAKRA ${r.ck} · ${r.cn}`;
-  ytModalName.textContent = r.name;
-  ytFrame.src = `https://www.youtube-nocookie.com/embed/${r.yt.id}?start=${r.yt.start}&autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+  const col = CKC[r.ck];
+  ytInfo.innerHTML = `
+    <div class="tt-n">MELA № ${r.n}</div>
+    <div class="tt-name">${r.name}</div>
+    ${r.alt ? `<div class="tt-alt">also: ${r.alt}</div>` : ''}
+    <div class="tt-skt">${r.skt}</div>
+    <div class="tt-sw">S · ${r.R} · ${r.G} · ${r.M} · P · ${r.D} · ${r.N} · S</div>
+    <div class="tt-aro"><span>ĀRO</span>${r.aro}</div>
+    <div class="tt-aro"><span>AVA</span>${r.ava}</div>
+    <span class="tt-ck" style="border-color:${col}44;color:${col}">Chakra ${r.ck} · ${r.cn}</span>`;
+  ytFrame.src = `https://www.youtube.com/embed/${r.yt.id}?start=${r.yt.start}&autoplay=1&playsinline=1`;
   ytFallbackLink.href = `https://www.youtube.com/watch?v=${r.yt.id}&t=${r.yt.start}s`;
   ytOverlay.classList.add('on');
   document.body.style.overflow = 'hidden';
