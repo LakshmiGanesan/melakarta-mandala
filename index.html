@@ -325,15 +325,20 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   animation:ytPop 0.18s ease;
 }
 @keyframes ytPop{ from{transform:scale(0.96);opacity:0;} to{transform:scale(1);opacity:1;} }
+.yt-modal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:14px 20px 12px;
+  border-bottom:1px solid var(--ring-soft);
+}
+.yt-modal-head-text{ min-width:0; }
 .yt-modal-close{
-  position:absolute;top:-15px;right:-15px;z-index:5;
-  width:32px;height:32px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:0.78rem;
-  background:var(--tt-bg);color:var(--badge-text);
-  border:1px solid var(--tt-border);
-  cursor:pointer;transition:all 0.2s;
-  box-shadow:0 4px 14px rgba(0,0,0,0.45);
+  flex-shrink:0;
+  display:flex;align-items:center;gap:5px;
+  font-family:'Cinzel',serif;font-size:0.64rem;letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--badge-text);background:none;
+  border:1px solid var(--ring-bold);border-radius:20px;
+  padding:6px 14px;cursor:pointer;transition:all 0.2s;
 }
 .yt-modal-close:hover{ color:var(--header-title);border-color:var(--header-title); }
 .yt-modal-frame{ position:relative;width:100%;aspect-ratio:16/9;background:#000; }
@@ -398,7 +403,10 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 
 <div class="yt-modal-overlay" id="ytOverlay" onclick="if(event.target===this) closeYTModal();">
   <div class="yt-modal" id="ytModal">
-    <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕</button>
+    <div class="yt-modal-head">
+      <div class="yt-modal-head-text" id="ytHeadText"></div>
+      <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕ Close</button>
+    </div>
     <div class="yt-modal-frame">
       <iframe id="ytFrame" src="" title="YouTube player"
         referrerpolicy="strict-origin-when-cross-origin"
@@ -804,6 +812,7 @@ function hideTT(){
 // ── YOUTUBE MODAL — focused, distraction-free playback inside the explorer
 const ytOverlay      = document.getElementById('ytOverlay');
 const ytFrame        = document.getElementById('ytFrame');
+const ytHeadText     = document.getElementById('ytHeadText');
 const ytInfo         = document.getElementById('ytInfo');
 const ytFallbackLink = document.getElementById('ytFallbackLink');
 
@@ -812,11 +821,12 @@ function openYTModal(melaNum){
   if(!r || !r.yt) return;
   hideTT();
   const col = CKC[r.ck];
-  ytInfo.innerHTML = `
+  ytHeadText.innerHTML = `
     <div class="tt-n">MELA № ${r.n}</div>
     <div class="tt-name">${r.name}</div>
     ${r.alt ? `<div class="tt-alt">also: ${r.alt}</div>` : ''}
-    <div class="tt-skt">${r.skt}</div>
+    <div class="tt-skt">${r.skt}</div>`;
+  ytInfo.innerHTML = `
     <div class="tt-sw">S · ${r.R} · ${r.G} · ${r.M} · P · ${r.D} · ${r.N} · S</div>
     <div class="tt-aro"><span>ĀRO</span>${r.aro}</div>
     <div class="tt-aro"><span>AVA</span>${r.ava}</div>
