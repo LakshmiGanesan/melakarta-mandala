@@ -166,9 +166,9 @@ svg{width:100%;height:100%;overflow:visible;}
 .tt-close:hover{ color:var(--header-title);border-color:var(--header-title); }
 .tt-n{ font-family:'Cinzel',serif;font-size:.58rem;color:var(--tt-n);letter-spacing:.15em; }
 .tt-name{ font-family:'Gentium Plus',serif;font-size:.95rem;font-weight:700;color:var(--tt-name);
-  margin:2px 0 2px;line-height:1.3; }
+  margin:2px 0 2px;line-height:1.3;overflow-wrap:break-word;word-break:break-word; }
 .tt-skt{ font-family:'Noto Serif Devanagari',serif;font-size:.83rem;
-  color:var(--tt-skt);margin-bottom:6px; }
+  color:var(--tt-skt);margin-bottom:6px;overflow-wrap:break-word;word-break:break-word; }
 .tt-sw{ font-size:.74rem;color:var(--tt-sw);letter-spacing:.04em;margin-bottom:4px; }
 .tt-aro{ font-size:.7rem;color:var(--tt-aro);line-height:1.75; }
 .tt-aro span{ color:var(--tt-aro-lbl);font-family:'Cinzel',serif;font-size:.54rem;
@@ -294,7 +294,7 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 .tt-alt{
   font-family:'Gentium Plus',serif;font-style:italic;
   font-size:0.78rem;color:var(--tt-skt);opacity:0.75;
-  margin-bottom:2px;
+  margin-bottom:2px;overflow-wrap:break-word;word-break:break-word;
 }
 .tt-yt{   display:block;width:100%;margin-top:8px;padding:8px 0 0;
   border:none;border-top:1px solid var(--ring-soft);
@@ -316,31 +316,31 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 }
 .yt-modal-overlay.on{ display:flex; }
 .yt-modal{
-  position:relative;
-  width:min(900px,96vw);
+  width:100%;max-width:900px;
+  max-height:88vh;
   border-radius:12px;
-  overflow:hidden;
+  overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
   background:var(--tt-bg);
   box-shadow:0 24px 70px rgba(0,0,0,0.55);
   animation:ytPop 0.18s ease;
 }
 @keyframes ytPop{ from{transform:scale(0.96);opacity:0;} to{transform:scale(1);opacity:1;} }
+/* Fixed to the screen corner — always reachable, never competes for space with the title */
+.yt-modal-close{
+  position:fixed;top:18px;right:20px;z-index:2010;
+  display:flex;align-items:center;gap:6px;
+  font-family:'Cinzel',serif;font-size:0.66rem;letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#f0e8d0;background:rgba(0,0,0,0.45);
+  border:1px solid rgba(240,232,208,0.35);border-radius:24px;
+  padding:8px 16px;cursor:pointer;transition:all 0.2s;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.yt-modal-close:hover{ background:rgba(0,0,0,0.65);border-color:var(--header-title);color:var(--header-title); }
 .yt-modal-head{
-  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
   padding:14px 20px 12px;
   border-bottom:1px solid var(--ring-soft);
 }
-.yt-modal-head-text{ min-width:0; }
-.yt-modal-close{
-  flex-shrink:0;
-  display:flex;align-items:center;gap:5px;
-  font-family:'Cinzel',serif;font-size:0.64rem;letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--badge-text);background:none;
-  border:1px solid var(--ring-bold);border-radius:20px;
-  padding:6px 14px;cursor:pointer;transition:all 0.2s;
-}
-.yt-modal-close:hover{ color:var(--header-title);border-color:var(--header-title); }
 .yt-modal-frame{ position:relative;width:100%;aspect-ratio:16/9;background:#000; }
 .yt-modal-frame iframe{ position:absolute;inset:0;width:100%;height:100%;border:0; }
 .yt-modal-info{
@@ -354,6 +354,43 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 }
 .yt-modal-fallback a{ color:var(--header-title);text-decoration:none;font-style:normal; }
 .yt-modal-fallback a:hover{ text-decoration:underline; }
+
+/* ── RESPONSIVE — TABLET ── */
+@media (max-width: 900px){
+  .key-panel{ grid-template-columns:repeat(4,1fr); gap:10px 16px; }
+}
+
+/* ── RESPONSIVE — MOBILE / SMALL TABLET ── */
+@media (max-width: 680px){
+  .key-panel{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px 16px;
+    padding:14px 16px;
+  }
+  .key-group{ min-width:0; }
+  footer{ gap:6px 14px;padding:10px 16px 6px; }
+  #tt{ max-width:min(86vw,272px); }
+  .yt-modal-overlay{ padding:14px;gap:10px; }
+  .yt-modal{ max-height:92vh; }
+  .yt-modal-head{ padding:13px 16px 11px; }
+  .yt-modal-info{ padding:13px 16px 16px; }
+  .yt-modal-close{
+    top:12px;right:14px;
+    font-size:0.62rem;padding:7px 13px;
+  }
+}
+
+/* ── RESPONSIVE — PHONE ── */
+@media (max-width: 420px){
+  .key-panel{ grid-template-columns:1fr 1fr;gap:10px 12px;padding:12px 14px; }
+  .key-name{ font-size:0.67rem; }
+  .leg{ font-size:.55rem; }
+  footer{ gap:5px 10px;padding:9px 12px 6px; }
+  .yt-modal-overlay{ padding:0;align-items:stretch;justify-content:flex-end;gap:0; }
+  .yt-modal{ max-height:96vh;border-radius:14px 14px 0 0;width:100%;max-width:100%; }
+  .yt-modal-fallback{ padding:8px 0 14px; }
+  .yt-modal-close{ top:14px;right:14px; }
+}
 
 @media print {
   html { background:#fff !important; }
@@ -402,11 +439,9 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 <div id="tt"></div>
 
 <div class="yt-modal-overlay" id="ytOverlay" onclick="if(event.target===this) closeYTModal();">
+  <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕ Close</button>
   <div class="yt-modal" id="ytModal">
-    <div class="yt-modal-head">
-      <div class="yt-modal-head-text" id="ytHeadText"></div>
-      <button class="yt-modal-close" onclick="closeYTModal()" aria-label="Close player">✕ Close</button>
-    </div>
+    <div class="yt-modal-head" id="ytHeadText"></div>
     <div class="yt-modal-frame">
       <iframe id="ytFrame" src="" title="YouTube player"
         referrerpolicy="strict-origin-when-cross-origin"
