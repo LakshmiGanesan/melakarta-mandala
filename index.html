@@ -137,6 +137,25 @@ header p{
 .toggle-btn:hover{ color:var(--header-title);border-color:var(--header-title); }
 .toggle-icon{font-size:0.95rem;line-height:1;}
 
+/* ── ABOUT / HELP BUTTONS ── */
+.info-wrap{
+  position:fixed;top:16px;left:20px;z-index:1000;
+  display:flex;gap:8px;flex-wrap:wrap;max-width:50vw;
+}
+.info-btn{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.12em;
+  color:var(--badge-text);
+  background:var(--bg);
+  border:1px solid var(--ring-bold);
+  border-radius:20px;padding:7px 15px;
+  cursor:pointer;transition:background 0.3s,color 0.3s,border-color 0.3s;
+  text-transform:uppercase;
+  box-shadow:0 2px 14px rgba(0,0,0,0.35);
+}
+.info-btn:hover{ color:var(--header-title);border-color:var(--header-title); }
+.info-icon{font-size:0.85rem;line-height:1;}
+
 /* ── CHART ── */
 .wrap{width:min(95vw,840px);aspect-ratio:1;margin:6px auto 0;}
 svg{width:100%;height:100%;overflow:visible;}
@@ -270,7 +289,7 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   background:rgba(201,170,90,0.10);
 }
 .search-clear{
-  display:none;
+  display:inline-flex;align-items:center;gap:4px;
   font-family:'Cinzel',serif;font-size:0.6rem;
   background:none;border:1px solid var(--ring-bold);
   border-radius:20px;padding:5px 12px;
@@ -279,7 +298,6 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   letter-spacing:0.1em;
 }
 .search-clear:hover{ color:var(--header-title);border-color:var(--header-title); }
-.search-clear.visible{ display:block; }
 .search-hint{
   font-family:'Gentium Plus',serif;font-style:italic;
   font-size:0.72rem;color:var(--badge-text);
@@ -355,6 +373,30 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 .yt-modal-fallback a{ color:var(--header-title);text-decoration:none;font-style:normal; }
 .yt-modal-fallback a:hover{ text-decoration:underline; }
 
+/* ── ABOUT / HELP MODAL CONTENT ── */
+.info-body{
+  font-family:'Gentium Plus',serif;font-size:0.92rem;line-height:1.7;
+  color:var(--tt-aro);max-height:62vh;overflow-y:auto;
+}
+.info-body p{ margin:0 0 13px; }
+.info-body h3{
+  font-family:'Cinzel',serif;font-size:0.68rem;font-weight:600;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--header-title);opacity:0.8;
+  margin:18px 0 9px;
+}
+.info-body h3:first-child{ margin-top:0; }
+.info-body ul{ margin:0 0 13px;padding:0;list-style:none; }
+.info-body ul.info-emoji li{ margin-bottom:7px; }
+.info-body ul.info-list li{
+  position:relative;padding-left:20px;margin-bottom:11px;
+}
+.info-body ul.info-list li::before{
+  content:'✦';position:absolute;left:0;top:0.18em;
+  font-size:0.62em;color:var(--header-title);opacity:0.6;
+}
+.info-body strong{ color:var(--tt-name);font-weight:700; }
+
 /* ── RESPONSIVE — TABLET ── */
 @media (max-width: 900px){
   .key-panel{ grid-template-columns:repeat(4,1fr); gap:10px 16px; }
@@ -370,6 +412,9 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   .key-group{ min-width:0; }
   footer{ gap:6px 14px;padding:10px 16px 6px; }
   #tt{ max-width:min(86vw,272px); }
+  .toggle-wrap{ top:10px;right:10px; }
+  .info-wrap{ top:10px;left:10px;gap:5px;max-width:60vw; }
+  .toggle-btn,.info-btn{ padding:6px 10px;font-size:0.56rem; }
   .yt-modal-overlay{ padding:14px;gap:10px; }
   .yt-modal{ max-height:92vh; }
   .yt-modal-head{ padding:13px 16px 11px; }
@@ -396,6 +441,7 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   html { background:#fff !important; }
   body { background:#fff !important; }
   .toggle-wrap { display:none !important; }
+  .info-wrap { display:none !important; }
   .search-wrap  { display:none !important; }
   #tt           { display:none !important; }
   .yt-modal-overlay { display:none !important; }
@@ -411,6 +457,15 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
 </style>
 </head>
 <body>
+
+<div class="info-wrap">
+  <button class="info-btn" onclick="openInfoModal('about')" aria-label="About this explorer">
+    <span class="info-icon">ℹ️</span><span>About</span>
+  </button>
+  <button class="info-btn" onclick="openInfoModal('help')" aria-label="How to use this explorer">
+    <span class="info-icon">❔</span><span>Help</span>
+  </button>
+</div>
 
 <div class="toggle-wrap">
   <button class="toggle-btn" id="toggleBtn" onclick="toggleMode()">
@@ -430,7 +485,7 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
     <input class="search-input" id="searchInput" type="text"
       placeholder="Search raga, mela №, chakra or swaras…"
       oninput="onSearch(this.value)" autocomplete="off" spellcheck="false"/>
-    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕ Clear</button>
+    <button class="search-clear" id="searchClear" onclick="clearAll()" aria-label="Clear all selections">✕ Clear All</button>
   </div>
   <div class="search-hint" id="searchHint">Try "Bhairavi", "22", "VEDA", or "R2 G3"</div>
 </div>
@@ -452,6 +507,14 @@ html.light .leg.active{ background:rgba(107,78,16,0.14); }
   </div>
   <div class="yt-modal-fallback">
     Trouble playing? <a id="ytFallbackLink" href="#" target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a>
+  </div>
+</div>
+
+<div class="yt-modal-overlay" id="infoOverlay" onclick="if(event.target===this) closeInfoModal();">
+  <button class="yt-modal-close" onclick="closeInfoModal()" aria-label="Close">✕ Close</button>
+  <div class="yt-modal" id="infoModal" style="max-width:640px;">
+    <div class="yt-modal-head" id="infoHeadText"></div>
+    <div class="yt-modal-info" id="infoBodyText" style="border-top:none;"></div>
   </div>
 </div>
 
@@ -878,8 +941,62 @@ function closeYTModal(){
   document.body.style.overflow = '';
 }
 
+// ── ABOUT / HELP MODAL
+const infoOverlay  = document.getElementById('infoOverlay');
+const infoHeadText = document.getElementById('infoHeadText');
+const infoBodyText = document.getElementById('infoBodyText');
+
+const INFO_CONTENT = {
+  about: {
+    title: 'Welcome to the Melakarta Explorer',
+    html: `
+      <p>The Melakarta Explorer is an interactive visual guide to the 72 Melakarta rāgas of Carnatic music. It is designed for students, practitioners, and music enthusiasts to explore the Melakarta system intuitively — not simply as individual rāgas, but as a beautifully organised musical framework.</p>
+      <p>Explore how the 72 Melakarta rāgas are organised into 12 chakras, discover the relationships between neighbouring rāgas, and see how changing individual swaras gives rise to different Melakarta scales.</p>
+      <h3>Each Melakarta includes</h3>
+      <ul class="info-emoji">
+        <li>🎼 Melakarta number and name</li>
+        <li>🕉 Sanskrit name</li>
+        <li>🎵 Ārohaṇa and Avarohaṇa</li>
+        <li>▶️ A YouTube audio reference to hear the rāga rendered</li>
+      </ul>
+      <p>Whether you're learning the Melakarta system for the first time or revisiting it with fresh eyes, this explorer offers a bird's-eye view of one of Carnatic music's most elegant organising principles — a living map of sound that invites exploration, discovery, and deeper listening.</p>
+    `
+  },
+  help: {
+    title: 'Finding Your Way Around',
+    html: `
+      <ul class="info-list">
+        <li><strong>Start with search or explore.</strong> Search by Melakarta name, number, chakra, or even swara combinations. If you already know a Melakarta rāga, simply type its name to jump directly to it.</li>
+        <li><strong>Explore visually.</strong> The Melakarta Wheel shows how the 72 Melakarta rāgas are organised into 12 chakras. Click any chakra to highlight all the rāgas within it and explore their place in the larger system.</li>
+        <li><strong>Use the swara and chakra keys.</strong> The legends at the bottom are interactive. Click any swara, swara variant, or chakra to highlight the corresponding Melakarta rāgas and reveal patterns across the system.</li>
+        <li><strong>Open a rāga card.</strong> Click any Melakarta rāga to view its detailed profile, including its Melakarta number, name, Ārohaṇa–Avarohaṇa, and a YouTube recording to hear the rāga rendered. Close the card at any time to continue exploring.</li>
+        <li><strong>Learn by comparison.</strong> Move between neighbouring Melakarta rāgas, compare chakras, and observe how subtle changes in swaras create entirely new melodic identities.</li>
+      </ul>
+      <p>The explorer is designed to encourage curiosity and help you understand the underlying logic of the Melakarta system.</p>
+      <p>Use the <strong>Clear All</strong> button beside the search bar at any time to reset every selection — search, key, chakra, and any open rāga card — and return to the full wheel.</p>
+    `
+  }
+};
+
+function openInfoModal(kind){
+  hideTT();
+  const data = INFO_CONTENT[kind];
+  if(!data) return;
+  infoHeadText.innerHTML = `<div class="tt-name" style="font-size:1.05rem;">${data.title}</div>`;
+  infoBodyText.innerHTML = `<div class="info-body">${data.html}</div>`;
+  infoOverlay.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInfoModal(){
+  infoOverlay.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
 document.addEventListener('keydown', e=>{
-  if(e.key === 'Escape' && ytOverlay.classList.contains('on')) closeYTModal();
+  if(e.key !== 'Escape') return;
+  if(ytOverlay.classList.contains('on')) closeYTModal();
+  if(infoOverlay.classList.contains('on')) closeInfoModal();
 });
 
 
@@ -1109,11 +1226,14 @@ function clearChakraFilter(){
   searchHint.className = 'search-hint';
 }
 
-function clearSearch(){
+function clearAll(){
+  // Clear typed search text
   searchInput.value = '';
-  searchClear.classList.remove('visible');
+  // Clear key-legend and chakra-legend filters (also resets the wheel highlight)
   clearKeyFilter();
   clearChakraFilter();
+  // Close any open raga card selected directly on the chart
+  hideTT();
 }
 
 // ── Initial draw
