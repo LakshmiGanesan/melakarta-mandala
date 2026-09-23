@@ -696,6 +696,13 @@ function AP(r1,r2,aS,aE){
   return `M${P(r1,s)}L${P(r2,s)}A${r2},${r2},0,${lg},1,${P(r2,e2)}L${P(r1,e2)}A${r1},${r1},0,${lg},0,${P(r1,s)}Z`;
 }
 
+// ── Deeper shade of a chakra colour (used for numbers/labels in light mode)
+function shade(hex, f){
+  const n=parseInt(hex.slice(1),16);
+  const c=[(n>>16)&255,(n>>8)&255,n&255].map(v=>Math.round(v*(1-f)));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
 // ── Get current CSS variable value
 function cv(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
@@ -761,15 +768,18 @@ function buildChart(){
       'fill-opacity':light?0.22:0.10,stroke:col,'stroke-width':0.35,'stroke-opacity':0.3}));
 
     // Number
-    const nR=K.nmI+12,[nx,ny]=[nR*Math.cos(mRad),nR*Math.sin(mRad)];
-    const nt=mk('text',{x:nx,y:ny,fill:col,
-      'font-family':'Cinzel,serif','font-size':'6.5','font-weight':'700',
+    const nR=K.nmI+9.5,[nx,ny]=[nR*Math.cos(mRad),nR*Math.sin(mRad)];
+    const nt=mk('text',{x:nx,y:ny,fill:light?shade(col,0.42):col,
+      'font-family':'Cinzel,serif','font-size':'9','font-weight':'700',
       'fill-opacity':'1',
+      // thin halo in the page background colour keeps numbers crisp on any segment
+      stroke:cv('--bg'),'stroke-width':light?'1.6':'1.8','stroke-opacity':light?'0.9':'0.85',
+      'paint-order':'stroke','stroke-linejoin':'round',
       'text-anchor':'middle','dominant-baseline':'middle',transform:`rotate(${rot},${nx},${ny})`});
     nt.textContent=r.n; gLbl.appendChild(nt);
 
     // Raga name (IAST only — no Devanagari on chart)
-    const nmR=K.nmI+48,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
+    const nmR=K.nmI+51,[tx,ty]=[nmR*Math.cos(mRad),nmR*Math.sin(mRad)];
     let dn=r.name; if(dn.length>15)dn=dn.slice(0,14)+'…';
     const nmt=mk('text',{x:tx,y:ty,
       fill:light?'#000000':cv('--name-text'),
@@ -808,17 +818,23 @@ function buildChart(){
       x2:+(K.nmO*Math.cos(a)).toFixed(2),y2:+(K.nmO*Math.sin(a)).toFixed(2),
       stroke:cv('--divider'),'stroke-width':1.1}));
     const midA=(c+0.5)*30, ar=(midA-90)*Math.PI/180;
-    const flip=midA>180,rot=flip?midA-90+180:midA-90;
+    // Labels run along the circle (tangential) so "N · NAME" has room without
+    // crossing into the name ring; bottom half is flipped so it never reads upside down
+    const flip=midA>90&&midA<270, rot=flip?midA+180:midA;
     const[cx,cy]=[K.ckLbl*Math.cos(ar),K.ckLbl*Math.sin(ar)];
     const cg=mk('g',{cursor:'pointer'});
     cg.addEventListener('click',()=>filterByChakra(c+1));
-    cg.addEventListener('mouseenter',()=>{ ct.setAttribute('font-size','9'); });
-    cg.addEventListener('mouseleave',()=>{ ct.setAttribute('font-size','7.8'); });
-    const ct=mk('text',{x:cx,y:cy,fill:CKC[c+1],
-      'font-family':'Cinzel,serif','font-size':'7.8','font-weight':'600',
-      'letter-spacing':'1.2','text-anchor':'middle','dominant-baseline':'middle',
+    cg.addEventListener('mouseenter',()=>{ ct.setAttribute('font-size','11'); });
+    cg.addEventListener('mouseleave',()=>{ ct.setAttribute('font-size','10'); });
+    const ct=mk('text',{x:cx,y:cy,fill:light?shade(CKC[c+1],0.35):CKC[c+1],
+      'font-family':'Cinzel,serif','font-size':'10','font-weight':'700',
+      'letter-spacing':'1.4','text-anchor':'middle','dominant-baseline':'middle',
+      stroke:cv('--bg'),'stroke-width':'1.6','stroke-opacity':'0.85',
+      'paint-order':'stroke','stroke-linejoin':'round',
       transform:`rotate(${rot},${cx},${cy})`});
-    ct.textContent=CKN[c+1]; cg.appendChild(ct); SV.appendChild(cg);
+    // Chakra number + name, e.g. "1 · INDU"
+    ct.textContent=`${c+1} · ${CKN[c+1]}`;
+    cg.appendChild(ct); SV.appendChild(cg);
   }
 
   // M1/M2 split
@@ -1112,10 +1128,61 @@ function patchHighlightLayer(){
 }
 
 // Patch redraw to also rebuild highlight layer
+// ── SWARA-COMBINATION PARSER
+// Accepts every common way of writing swaras:
+//   "G1 M1 D2 N3" · "g1,m1,d2,n3" · "G1M1D2N3" · "Ga1 Ma1 Da2 Ni3" · "Ri2 + Ga3" · "dha-2 ni-3"
+// Returns ['G1','M1',...] if the whole query is swaras, otherwise null.
+const SWARA_WORDS = {
+  s:'S', sa:'S', shadjam:'S', sadjam:'S', shadja:'S',
+  p:'P', pa:'P', panchamam:'P', pancamam:'P', panchama:'P',
+  r:'R', ri:'R', re:'R', ra:'R', rishabham:'R', rishabha:'R', rsabham:'R',
+  g:'G', ga:'G', gu:'G', gi:'G', gandharam:'G', gandhara:'G',
+  m:'M', ma:'M', mi:'M', madhyamam:'M', madhyama:'M',
+  d:'D', da:'D', dha:'D', dhi:'D', dhaivatam:'D', dhaivata:'D',
+  n:'N', ni:'N', nu:'N', nishadam:'N', nishada:'N', nisadam:'N'
+};
+function parseSwaraQuery(q){
+  const plain = q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+                 .replace(/\band\b/g,' ').replace(/[,;+&\/|·\-_.]/g,' ').trim();
+  if(!plain) return null;
+  const re = /([a-z]+)\s*([123])?/g;
+  const out = []; let m, consumed = '';
+  while((m = re.exec(plain))){
+    let word = m[1], num = m[2] || '';
+    // Split run-together input like "g1m1d2n3" is handled by the regex;
+    // split runs of bare letters like "sp" / "srgm" only if every letter is a swara
+    if(!(word in SWARA_WORDS)){
+      if(/^[srgmpdn]+$/.test(word) && !num){ word.split('').forEach(c=>out.push(SWARA_WORDS[c])); consumed+=m[0]; continue; }
+      return null;
+    }
+    const base = SWARA_WORDS[word];
+    if(base==='S' || base==='P'){ out.push(base); }
+    else if(num){ out.push(base+num); }
+    else { out.push(base+'?'); }   // letter without a number yet (still typing, or "any R")
+    consumed += m[0];
+  }
+  if(consumed.replace(/\s/g,'') !== plain.replace(/\s/g,'')) return null;
+  // Must contain at least one numbered swara to count as a swara search
+  if(!out.some(t=>/\d/.test(t))) return null;
+  return out;
+}
+
 function getMatches(q){
   if(!q) return null;
   const raw = q.trim().toLowerCase();
   const matches = new Set();
+
+  // Swara combination search takes priority when the query is purely swaras
+  const sw = parseSwaraQuery(q);
+  if(sw){
+    const want = sw.filter(t=>/\d/.test(t));   // S, P and unnumbered letters are always satisfied
+    DATA.forEach((r,i)=>{
+      const has = [r.R, r.G, r.M, r.D, r.N];
+      if(want.every(t=>has.includes(t))) matches.add(i);
+    });
+    matches.swaras = want;
+    return matches;
+  }
 
   DATA.forEach((r,i)=>{
     // 1. Mela number — exact
@@ -1220,6 +1287,22 @@ function onSearch(val){
 
   const matches = getMatches(q);
   applyHighlights(matches);
+
+  if(matches.swaras){
+    const combo = matches.swaras.join(' · ');
+    if(matches.size === 0){
+      searchHint.textContent = `No Melakarta has ${combo} together`;
+      searchHint.className = 'search-hint no-match';
+    } else if(matches.size === 1){
+      const r = DATA[[...matches][0]];
+      searchHint.textContent = `✦ ${combo} → Mela ${r.n} · ${r.name} · Chakra ${r.ck} ${r.cn}`;
+      searchHint.className = 'search-hint match';
+    } else {
+      searchHint.textContent = `✦ ${matches.size} ragas with ${combo}`;
+      searchHint.className = 'search-hint match';
+    }
+    return;
+  }
 
   if(matches.size === 0){
     searchHint.textContent = 'No ragas found — try a name, number, chakra, or swara';
