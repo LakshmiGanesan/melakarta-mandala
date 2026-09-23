@@ -175,6 +175,7 @@ svg{width:100%;height:100%;overflow:visible;}
   box-shadow:0 6px 28px rgba(0,0,0,0.32);
 }
 #tt.on{ opacity:1; }
+#tt:not(.on){ pointer-events:none; } /* hidden card must not block clicks on the wheel */
 .tt-close{
   position:absolute;top:9px;right:10px;
   font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.1em;
@@ -195,6 +196,22 @@ svg{width:100%;height:100%;overflow:visible;}
 .tt-ck{ display:inline-block;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;
   padding:2px 8px;border-radius:20px;margin-top:7px;color:var(--tt-name);
   background:rgba(201,170,90,.07);border:1px solid rgba(201,170,90,.18); }
+
+/* ── Raga card prev/next (arrow-key navigation) */
+.tt-nav{ display:flex;align-items:center;justify-content:space-between;gap:6px;
+  margin-top:8px;padding-top:7px;border-top:1px solid var(--ring-soft); }
+.tt-nav-btn{ font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.08em;
+  color:var(--badge-text);background:none;border:1px solid var(--ring-soft);
+  border-radius:20px;padding:2px 9px;cursor:pointer;transition:all .2s; }
+.tt-nav-btn:hover{ color:var(--header-title);border-color:var(--header-title); }
+.tt-nav-hint{ font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:var(--tt-n);opacity:.8; }
+
+/* ── "Start here" marker on the wheel */
+#startHere{ cursor:pointer; }
+#startHere .sh-arrow{ animation:shNudge 1.6s ease-in-out infinite; }
+@keyframes shNudge{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(3px,2px); } }
+@media (prefers-reduced-motion: reduce){ #startHere .sh-arrow{ animation:none; } }
+@media print{ #startHere .sh-arrow{ animation:none; } }
 
 
 /* ── SWARA KEY ── */
@@ -671,6 +688,7 @@ const K={ctrR:44,mI:52,mO:96,rI:100,rO:140,gI:144,gO:184,dI:188,dO:228,nI:232,nO
 const SEG=360/72, GAP=0.35;
 
 const SV=document.getElementById('svg'), NS='http://www.w3.org/2000/svg';
+const HITS=[]; // hit segment per DATA index — used by arrow-key navigation
 const mk=(t,a={})=>{const e=document.createElementNS(NS,t);for(const[k,v] of Object.entries(a))e.setAttribute(k,v);return e;};
 function AP(r1,r2,aS,aE){
   const s=(aS-90)*Math.PI/180,e2=(aE-90)*Math.PI/180,lg=(aE-aS)>180?1:0;
@@ -687,7 +705,9 @@ function redraw(){
   patchHighlightLayer();
   // Re-apply any active search or filter
   const q = searchInput ? searchInput.value.trim() : '';
-  if(q) applyHighlights(getMatches(q));
+  if(q) hlMatches = getMatches(q);
+  if(hlSelected!==null && HITS[hlSelected]) activeHit = HITS[hlSelected];
+  renderHighlights();
 }
 
 function buildChart(){
@@ -772,11 +792,13 @@ function buildChart(){
       // Attach segment element so showTT can position card next to it
       e._hitEl = hit;
       showTT(e,r);
-      hit.setAttribute('fill',cv('--hit-hover'));
+      hit.setAttribute('fill','transparent');
+      setSelectedRaga(i);
     });
     hit.addEventListener('mouseenter',()=>{ if(activeHit!==hit) hit.setAttribute('fill','rgba(255,255,255,0.025)'); });
     hit.addEventListener('mouseleave',()=>{ if(activeHit!==hit) hit.setAttribute('fill','transparent'); });
     gHit.appendChild(hit);
+    HITS[i] = hit; // keyboard navigation lookup
   });
 
   // Chakra dividers + labels
@@ -859,6 +881,33 @@ function buildChart(){
   const ctF=mk('text',{x:0,y:21,fill:cv('--ctr-fixed'),'font-family':'Cinzel,serif','font-size':'5.5',
     'letter-spacing':'1','text-anchor':'middle','dominant-baseline':'middle'});
   ctF.textContent='FIXED'; SV.appendChild(ctF);
+
+  drawStartMarker();
+}
+
+// ── "START HERE" marker — points at Mela 1 (Kanakāṅgi, Indu chakra) at 12 o'clock
+function drawStartMarker(){
+  const col = cv('--header-title') || '#c9aa5a';
+  const g = mk('g',{id:'startHere'});
+  const a = (0.5*SEG-90)*Math.PI/180;              // centre angle of segment 1
+  const tx = +(K.rim*Math.cos(a)).toFixed(2), ty = +(K.rim*Math.sin(a)).toFixed(2);
+  // Label sits above the rim, just left of 12 o'clock
+  const lbl = mk('text',{x:-6,y:-409,fill:col,'font-family':'Cinzel,serif','font-size':'10',
+    'font-weight':'700','letter-spacing':'1.4','text-anchor':'end','dominant-baseline':'middle'});
+  lbl.textContent = 'START HERE';
+  g.appendChild(lbl);
+  // Curved arrow from the label down onto Kanakāṅgi's outer edge
+  const arrow = mk('g',{class:'sh-arrow'});
+  arrow.appendChild(mk('path',{d:`M-2,-409 Q${tx-2},-411 ${tx},${ty-3}`,fill:'none',stroke:col,
+    'stroke-width':1.3,'stroke-linecap':'round'}));
+  arrow.appendChild(mk('path',{d:`M${tx-3.2},${ty-6.5} L${tx},${ty-1.5} L${tx+3.2},${ty-6.5}`,fill:'none',
+    stroke:col,'stroke-width':1.3,'stroke-linecap':'round','stroke-linejoin':'round'}));
+  g.appendChild(arrow);
+  // Generous invisible hit area so it's easy to click
+  g.appendChild(mk('rect',{x:-100,y:-419,width:tx+106,height:24,fill:'transparent'}));
+  const t = mk('title'); t.textContent = 'Start with Mela 1 · Kanakāṅgi — then use the arrow keys'; g.appendChild(t);
+  g.addEventListener('click',e=>{ e.stopPropagation(); openRagaCard(0); });
+  SV.appendChild(g);
 }
 
 // ── Tooltip
@@ -882,7 +931,12 @@ function showTT(e,r){
     <div class="tt-aro"><span>ĀRO</span>${r.aro}</div>
     <div class="tt-aro"><span>AVA</span>${r.ava}</div>
     <span class="tt-ck" style="border-color:${col}44;color:${col}">Chakra ${r.ck} · ${r.cn}</span>
-    ${audioHTML}`;
+    ${audioHTML}
+    <div class="tt-nav">
+      <button class="tt-nav-btn" onclick="event.stopPropagation();stepRaga(-1)" title="Previous Melakarta (← key)">‹ ${DATA[(r.n+70)%72].n}</button>
+      <span class="tt-nav-hint">use ← → keys</span>
+      <button class="tt-nav-btn" onclick="event.stopPropagation();stepRaga(1)" title="Next Melakarta (→ key)">${DATA[r.n%72].n} ›</button>
+    </div>`;
   ttEl.classList.add('on');
   // Position card adjacent to the clicked segment, centred vertically on it
   requestAnimationFrame(()=>{
@@ -905,6 +959,7 @@ function showTT(e,r){
 function hideTT(){
   ttEl.classList.remove('on');
   if(activeHit){activeHit.setAttribute('fill','transparent');activeHit=null;}
+  if(typeof setSelectedRaga==='function' && hlSelected!==null) setSelectedRaga(null);
 }
 
 // ── YOUTUBE MODAL — focused, distraction-free playback inside the explorer
@@ -970,6 +1025,7 @@ const INFO_CONTENT = {
         <li><strong>Explore visually.</strong> The Melakarta Wheel shows how the 72 Melakarta rāgas are organised into 12 chakras. Click any chakra to highlight all the rāgas within it and explore their place in the larger system.</li>
         <li><strong>Use the swara and chakra keys.</strong> The legends at the bottom are interactive. Click any swara, swara variant, or chakra to highlight the corresponding Melakarta rāgas and reveal patterns across the system.</li>
         <li><strong>Open a rāga card.</strong> Click any Melakarta rāga to view its detailed profile, including its Melakarta number, name, Ārohaṇa–Avarohaṇa, and a YouTube recording to hear the rāga rendered. Close the card at any time to continue exploring.</li>
+        <li><strong>Walk the wheel with arrow keys.</strong> Begin at <em>Start here</em> — Mela 1, Kanakāṅgi. With a rāga card open, → / ↓ moves clockwise to the next Melakarta (all the way to 72, Rasikapriya) and ← / ↑ moves back. With a chakra selected, the arrows step Indu → Netra → Agni … → Āditya. With a swara key selected, they step M1 → M2 → R1 … N3 → Variant 1–3.</li>
         <li><strong>Learn by comparison.</strong> Move between neighbouring Melakarta rāgas, compare chakras, and observe how subtle changes in swaras create entirely new melodic identities.</li>
       </ul>
       <p>The explorer is designed to encourage curiosity and help you understand the underlying logic of the Melakarta system.</p>
@@ -1085,31 +1141,65 @@ function getMatches(q){
   return matches;
 }
 
+// ── UNIFIED HIGHLIGHT
+// One visual treatment for every kind of selection — search, swara key, chakra,
+// clicking a rāga, or stepping with the arrow keys:
+//   • highlighted segments: gold outline + soft gold glow + faint gold wash
+//   • everything else: dimmed by only ~8% so the whole wheel stays readable
+// A single selected rāga (open card) is drawn on top, slightly stronger.
+let hlMatches  = null;   // Set of DATA indices from search / key / chakra filter
+let hlSelected = null;   // DATA index of the rāga whose card is open
+
+const HL_DIM = 0.08;     // how much non-highlighted segments are dimmed (5–10%)
+
 function applyHighlights(matches){
+  hlMatches = matches || null;
+  renderHighlights();
+}
+
+function setSelectedRaga(i){
+  hlSelected = (i===null || i===undefined) ? null : i;
+  renderHighlights();
+}
+
+function renderHighlights(){
   const hl = SV.querySelector('#highlightLayer');
   if(!hl) return;
   const paths = hl.querySelectorAll('path');
-  const hasMatches = matches && matches.size > 0;
-  const activeCol = getComputedStyle(document.documentElement)
-    .getPropertyValue('--header-title').trim();
+  const gold  = cv('--header-title');
+  const bg    = cv('--bg');
+  const anyOn = (hlMatches && hlMatches.size>0) || hlSelected!==null;
+  const glow  = isLight ? 'rgba(107,78,16,0.55)' : 'rgba(232,200,110,0.75)';
 
-  paths.forEach((p,i)=>{
-    if(!matches){
-      // No search — all clear
+  paths.forEach(p=>{
+    const i   = +p.getAttribute('data-idx');
+    const sel = hlSelected===i;
+    const on  = sel || (hlMatches && hlMatches.has(i));
+    p.style.filter = '';
+    if(!anyOn){
       p.setAttribute('fill','transparent');
+      p.setAttribute('fill-opacity','1');
       p.setAttribute('stroke','none');
-    } else if(matches.has(i)){
-      // Match — golden glow
-      p.setAttribute('fill','rgba(201,170,90,0.18)');
-      p.setAttribute('stroke',activeCol);
-      p.setAttribute('stroke-width','1.5');
-      p.setAttribute('stroke-opacity','0.7');
+    } else if(on){
+      p.setAttribute('fill',gold);
+      p.setAttribute('fill-opacity', sel ? '0.16' : '0.10');
+      p.setAttribute('stroke',gold);
+      p.setAttribute('stroke-width', sel ? '2.4' : '1.6');
+      p.setAttribute('stroke-opacity','1');
+      p.setAttribute('stroke-linejoin','round');
+      p.style.filter = `drop-shadow(0 0 ${sel?4:2.5}px ${glow})`;
     } else {
-      // Non-match — dim out
-      p.setAttribute('fill','rgba(0,0,0,0.45)');
+      // Gentle dim: a thin veil of the page background, never more than ~8%
+      p.setAttribute('fill',bg);
+      p.setAttribute('fill-opacity',String(HL_DIM));
       p.setAttribute('stroke','none');
     }
   });
+  // Selected rāga drawn last so its outline sits above neighbouring highlights
+  if(hlSelected!==null){
+    const sp = hl.querySelector(`path[data-idx="${hlSelected}"]`);
+    if(sp) hl.appendChild(sp);
+  }
 }
 
 function onSearch(val){
@@ -1156,6 +1246,9 @@ function filterByKey(el, token){
   // Clear search input
   searchInput.value = '';
   searchClear.classList.remove('visible');
+  // Only one filter at a time — clear any active chakra selection
+  activeChakraFilter = null;
+  document.querySelectorAll('.leg').forEach(l=>l.classList.remove('active'));
   activeKeyFilter = token;
 
   // Mark active item, clear others
@@ -1235,6 +1328,61 @@ function clearAll(){
   // Close any open raga card selected directly on the chart
   hideTT();
 }
+
+// ── ARROW-KEY NAVIGATION
+// Priority: open rāga card → active swara-key filter → active chakra filter.
+// → / ↓ = next, ← / ↑ = previous; all sequences wrap around.
+const KEY_ORDER = ['M1','M2','R1','R2','R3','G1','G2','G3','D1','D2','D3','N1','N2','N3','v1','v2','v3'];
+
+function openRagaCard(i){
+  const hit = HITS[i];
+  if(!hit) return;
+  if(activeHit && activeHit!==hit) activeHit.setAttribute('fill','transparent');
+  activeHit = hit;
+  hit._seg = true;
+  showTT({_hitEl:hit, clientX:0, clientY:0}, DATA[i]);
+  hit.setAttribute('fill','transparent');
+  setSelectedRaga(i);
+}
+
+function stepRaga(dir){
+  const cur = activeHit ? HITS.indexOf(activeHit) : -1;
+  const next = cur<0 ? 0 : (cur + dir + 72) % 72;
+  openRagaCard(next);
+}
+
+function stepKey(dir){
+  const cur = KEY_ORDER.indexOf(activeKeyFilter);
+  const tok = KEY_ORDER[(cur + dir + KEY_ORDER.length) % KEY_ORDER.length];
+  const el = document.querySelector(`.key-item[data-filter="${tok}"]`);
+  if(el) filterByKey(el, tok);
+}
+
+function stepChakra(dir){
+  filterByChakra(((activeChakraFilter - 1 + dir + 12) % 12) + 1);
+}
+
+document.addEventListener('keydown', e=>{
+  const dirMap = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1};
+  const dir = dirMap[e.key];
+  if(!dir || e.altKey || e.ctrlKey || e.metaKey) return;
+  // Leave arrows alone while typing or when a modal is open
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if(tag==='INPUT' || tag==='TEXTAREA' || tag==='SELECT') return;
+  if(ytOverlay.classList.contains('on') || infoOverlay.classList.contains('on')) return;
+
+  if(ttEl.classList.contains('on') && activeHit){ stepRaga(dir); }
+  else if(activeKeyFilter && KEY_ORDER.includes(activeKeyFilter)){ stepKey(dir); }
+  else if(activeChakraFilter){ stepChakra(dir); }
+  else return;               // nothing selected → normal page scrolling
+  e.preventDefault();
+});
+
+// Escape also closes an open rāga card
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && ttEl.classList.contains('on')
+     && !ytOverlay.classList.contains('on') && !infoOverlay.classList.contains('on')) hideTT();
+});
 
 // ── Initial draw
 buildChart();
